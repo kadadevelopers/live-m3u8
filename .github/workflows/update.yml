@@ -1,0 +1,37 @@
+name: Update M3U8 Streams
+
+on:
+  schedule:
+    - cron: '0 */3 * * *'   # كل 3 ساعات
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Create folders
+        run: |
+          mkdir -p fr ar txt
+
+      # مثال قناة واحدة (6ter)
+      - name: Generate 6ter
+        run: |
+          URL=$(curl -k -s -H "User-Agent: Mozilla/5.0" \
+          https://callofliberty.fr/tv/22-6ter/22-6ter.php \
+          | grep -oP "source:\s*'\K[^']+")
+          
+          curl -k -e "https://callofliberty.fr/" \
+          -H "Origin: https://callofliberty.fr" \
+          "$URL" > fr/video6ter.m3u8
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add fr/video6ter.m3u8
+          git commit -m "update streams" || echo "No changes"
+          git push
