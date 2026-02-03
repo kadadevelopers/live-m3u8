@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
+        with:
+         persist-credentials: false
 
       - name: Create fr Folder
         run: mkdir -p fr
