@@ -1,4 +1,4 @@
-name: Run Script Every 6 Hours FR
+name: Run Script TNT Every 6 Hours FR
 
 on:
   schedule:
@@ -82,7 +82,7 @@ jobs:
 
       - name: Commit and Push Changes
         env:
-         GITHUB_TOKEN: ${{ secrets.TEE_TV_APP }}  # Use the stored PAT secret
+         GITHUB_TOKEN: ${{ secrets.KADA_TOKEN }}  # Use the stored PAT secret
         run: |
           git config --local user.email "hello@github.com"
           git config --local user.name "hello"
