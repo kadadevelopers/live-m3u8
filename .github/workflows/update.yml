@@ -13,57 +13,104 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
         with:
-          persist-credentials: false
+         ref: main
 
-      - name: Create fr and ar Folders
+      - name: Create fr Folder
+        run: mkdir -p fr
+
+      - name: Create txt Folder
+        run: mkdir -p txt        
+
+      - name: Run Script and Generate M3U8 for VideoTF1
         run: |
-          mkdir -p fr
-          mkdir -p ar
+          curl_output=$(curl -k -s -H "User-Agent: Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" https://callofliberty.fr/tv/1-TF1/1-TF1.php | grep -oP "source:\s*'\K[^']+(?=',)")
+          curl_output2=$(curl -k -e "https://callofliberty.fr/" -A "User-Agent: Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" -H "Origin: https://callofliberty.fr" $curl_output)
+          echo "$curl_output2" > fr/videotf1.m3u8  # Use single > to overwrite existing content
 
-      # ------------------------
-      # Generate M3U8 files
-      # ------------------------
-      - name: Generate M3U8 Files
+      - name: Run Script and Generate M3U8 for VideoTF1FS
         run: |
-          set -e  # Stop on errors
+          curl_output=$(curl -k -s -H "User-Agent: Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" https://callofliberty.fr/tv/20-TF1SERIESFILMS/20-TF1SERIESFILMS.php | grep -oP "source:\s*'\K[^']+(?=',)")
+          curl_output2=$(curl -k -e "https://callofliberty.fr/" -A "User-Agent: Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" -H "Origin: https://callofliberty.fr" $curl_output)
+          echo "$curl_output2" > fr/videotf1fs.m3u8  # Use single > to overwrite existing content
 
-          generate_m3u8() {
-            local url=$1
-            local output=$2
-            echo "Processing $output from $url ..."
-            link=$(curl -k -s -H "User-Agent: Mozilla/5.0" "$url" | grep -oP "source:\s*'\K[^']+(?=',)")
-            if [[ -n "$link" ]]; then
-              content=$(curl -k -s -e "https://callofliberty.fr/" -H "Origin: https://callofliberty.fr" -A "Mozilla/5.0" "$link")
-              if [[ -n "$content" ]]; then
-                echo "$content" > "$output"
-                echo "Created $output"
-              else
-                echo "Warning: No content found for $output"
-              fi
-            else
-              echo "Warning: No source link found for $output"
-            fi
-          }
+      - name: Run Script and Generate M3U8 for VideoTMC
+        run: |
+          #curl_output=$(curl -k -s -H "User-Agent: Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" https://callofliberty.fr/tv/10-TMC/10-TMC.php | grep -oP "source:\s*'\K[^']+(?=',)")
+          curl_output=$(curl -k -s -H "User-Agent: Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" https://callofliberty.fr/tv/1-TF1/1-TF1.php | grep -oP "source:\s*'\K[^']+(?=',)" | sed 's|TF1|TMC|g')
+          curl_output2=$(curl -k -e "https://callofliberty.fr/" -A "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" -H "Origin: https://callofliberty.fr" $curl_output)
+          echo "$curl_output2" > fr/videotmc.m3u8  # Use single > to overwrite existing content
 
-          # TF1 Channels
-          generate_m3u8 "https://callofliberty.fr/tv/1-TF1/1-TF1.php" "fr/videotf1.m3u8"
-          generate_m3u8 "https://callofliberty.fr/tv/20-TF1SERIESFILMS/20-TF1SERIESFILMS.php" "fr/videotf1fs.m3u8"
-          generate_m3u8 "https://callofliberty.fr/tv/1-TF1/1-TF1.php" "fr/videotmc.m3u8"  # using sed TF1->TMC
-          sed -i 's|TF1|TMC|g' fr/videotmc.m3u8
-          generate_m3u8 "https://callofliberty.fr/tv/11-TFX/11-TFX.php" "fr/videotfx.m3u8"
-          generate_m3u8 "https://callofliberty.fr/tv/76-CANALPLUS/76-CANALPLUS.php" "fr/videocp.m3u8"
-          generate_m3u8 "https://callofliberty.fr/tv/9-W9/9-W9.php" "fr/videow9.m3u8"
-          generate_m3u8 "https://callofliberty.fr/tv/22-6ter/22-6ter.php" "fr/video6ter.m3u8"
+      - name: Run Script and Generate M3U8 for VideoTFX
+        run: |
+          curl_output=$(curl -k -s -H "User-Agent: Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" https://callofliberty.fr/tv/11-TFX/11-TFX.php | grep -oP "source:\s*'\K[^']+(?=',)")
+          curl_output2=$(curl -k -e "https://callofliberty.fr/" -A "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" -H "Origin: https://callofliberty.fr" $curl_output)
+          echo "$curl_output2" > fr/videotfx.m3u8  # Use single > to overwrite existing content
 
-      # ------------------------
-      # Commit and Push
-      # ------------------------
+      - name: Run Script and Generate M3U8 for VideoCP
+        run: |
+          curl_output=$(curl -k -s -H "User-Agent: Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" https://callofliberty.fr/tv/76-CANALPLUS/76-CANALPLUS.php | grep -oP "source:\s*'\K[^']+(?=',)")
+          curl_output2=$(curl -k -e "https://callofliberty.fr/" -A "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" -H "Origin: https://callofliberty.fr" $curl_output)
+          echo "$curl_output2" > fr/videocp.m3u8  # Use single > to overwrite existing content 
+
+      - name: Run Script and Generate M3U8 for VideoW9
+        run: |
+          curl_output=$(curl -k -s -H "User-Agent: Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" https://callofliberty.fr/tv/9-W9/9-W9.php | grep -oP "source:\s*'\K[^']+(?=',)")
+          curl_output2=$(curl -k -e "https://callofliberty.fr/" -A "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" -H "Origin: https://callofliberty.fr" $curl_output)
+          echo "$curl_output2" > fr/videow9.m3u8  # Use single > to overwrite existing content           
+
+      - name: Run Script and Generate M3U8 for Video6ter
+        run: |
+          curl_output=$(curl -k -s -H "User-Agent: Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" https://callofliberty.fr/tv/22-6ter/22-6ter.php | grep -oP "source:\s*'\K[^']+(?=',)")
+          curl_output2=$(curl -k -e "https://callofliberty.fr/" -A "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" -H "Origin: https://callofliberty.fr" $curl_output)
+          echo "$curl_output2" > fr/video6ter.m3u8  # Use single > to overwrite existing content   
+
+      - name: Run Script and Generate M3U8 for F2
+        run: |
+          curl_output=$(curl -k -s -H "User-Agent: Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" https://callofliberty.fr/tv/2-france.2/2-france.2.php | grep -oP "source:\s*'\K[^']+(?=',)")
+          curl_output2=$(curl -k -e "https://callofliberty.fr/" -A "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" -H "Origin: https://callofliberty.fr" $curl_output)
+          echo "$curl_output2" > fr/videof2.m3u8  # Use single > to overwrite existing content   
+
+      - name: Run Script and Generate M3U8 for F3
+        run: |
+          curl_output=$(curl -k -s -H "User-Agent: Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" https://callofliberty.fr/tv/3-france.3/3-france.3.php | grep -oP "source:\s*'\K[^']+(?=',)")
+          curl_output2=$(curl -k -e "https://callofliberty.fr/" -A "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" -H "Origin: https://callofliberty.fr" $curl_output)
+          echo "$curl_output2" > fr/videof3.m3u8  # Use single > to overwrite existing content   
+
+      - name: Run Script and Generate M3U8 for F4
+        run: |
+          curl_output=$(curl -k -s -H "User-Agent: Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" https://callofliberty.fr/tv/4-france.4/4-france.4.php | grep -oP "source:\s*'\K[^']+(?=',)")
+          curl_output2=$(curl -k -e "https://callofliberty.fr/" -A "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" -H "Origin: https://callofliberty.fr" $curl_output)
+          echo "$curl_output2" > fr/videof4.m3u8  # Use single > to overwrite existing content   
+
+      - name: Run Script and Generate M3U8 for F5
+        run: |
+          curl_output=$(curl -k -s -H "User-Agent: Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" https://callofliberty.fr/tv/5-france.5/5-france.5.php | grep -oP "source:\s*'\K[^']+(?=',)")
+          curl_output2=$(curl -k -e "https://callofliberty.fr/" -A "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" -H "Origin: https://callofliberty.fr" $curl_output)
+          echo "$curl_output2" > fr/videof5.m3u8  # Use single > to overwrite existing content
+
+      - name: Run Script and Generate M3U8 for CTurk
+        run: |
+         python_output=$(python py/videocnnturk.py)
+         echo "#EXTM3U" > ar/videocnnturk.m3u
+         echo "#EXTINF:-1, CNN Turk" >> ar/videocnnturk.m3u
+         echo "$python_output" >> ar/videocnnturk.m3u    
+
+      - name: Run Script and Generate M3U8 for M6
+        run: |
+         python_output=$(python py/videom6.py)
+         echo "#EXTM3U" > fr/videom6.m3u8
+         echo "#EXT-X-STREAM-INF:AVERAGE-BANDWIDTH=5340000,BANDWIDTH=6680000,RESOLUTION=1280x720,FRAME-RATE=50.000,CODECS="avc1.640020,mp4a.40.2",CLOSED-CAPTIONS=NONE" >> fr/videom6.m3u8
+         echo "$python_output" >> fr/videom6.m3u8
+
+      - name: Pull changes from remote
+        run: git pull origin main          
+
       - name: Commit and Push Changes
         env:
-          TEE_TV_APP: ${{ secrets.TEE_TV_APP }}
+         GITHUB_TOKEN: ${{ secrets.ROTANA_TOKEN }}  # Use the stored PAT secret
         run: |
-          git config --local user.email "kada.developers@gmail.com"
-          git config --local user.name "kadadevelopers"
-          git add fr/*.m3u8 ar/*.m3u || echo "No new files to add"
-          git diff-index --quiet HEAD || git commit -m "latest updates"
-          git push "https://$TEE_TV_APP@github.com/kadadevelopers/live-m3u8.git"
+          git config --local user.email "hello@github.com"
+          git config --local user.name "hello"
+          git add fr/videotf1.m3u8 fr/videotf1fs.m3u8 fr/videotmc.m3u8 fr/videotfx.m3u8 fr/videocp.m3u8 fr/videow9.m3u8 fr/video6ter.m3u8 fr/videof2.m3u8 fr/videof3.m3u8 fr/videof4.m3u8 fr/videof5.m3u8 fr/videom6.m3u8 ar/videocnnturk.m3u
+          git commit -m "latest updates"
+          git push
