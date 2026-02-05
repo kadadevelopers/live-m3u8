@@ -133,6 +133,6 @@ jobs:
           git config --local user.email "kada.developers@gmail.com"
           git config --local user.name "kadadevelopers"
           git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/kadadevelopers/live-m3u8.git
-          git add fr/videotf1.m3u8 fr/videotf1fs.m3u8 fr/videotmc.m3u8 fr/videotfx.m3u8 fr/videocp.m3u8 fr/videow9.m3u8 fr/videogulli.m3u8 fr/video6ter.m3u8 fr/videoab1.m3u8 fr/videoab3.m3u8 fr/videortl9.m3u8 fr/videotcm.m3u8 fr/videocanalj.m3u8 fr/videocnw.m3u8 fr/videoplanete.m3u8 fr/videof2.m3u8 fr/videof3.m3u8 fr/videof4.m3u8 fr/videof5.m3u8
+          git add fr/videotf1.m3u8 fr/videotf1fs.m3u8 fr/videotmc.m3u8 fr/videotfx.m3u8 fr/videocp.m3u8 fr/videow9.m3u8 fr/videogulli.m3u8 fr/video6ter.m3u8 fr/videoab1.m3u8 fr/videoab3.m3u8 fr/videortl9.m3u8 fr/videotcm.m3u8 fr/videocanalj.m3u8 fr/videocnw.m3u8 fr/videoplanete.m3u8 fr/videoanimaux.m3u8 fr/videof2.m3u8 fr/videof3.m3u8 fr/videof4.m3u8 fr/videof5.m3u8
           git commit -m "latest updates"
           git push
