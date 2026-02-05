@@ -57,7 +57,12 @@ jobs:
         run: |
           curl_output=$(curl -k -s -H "User-Agent: Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" https://callofliberty.fr/tv/22-6ter/22-6ter.php | grep -oP "source:\s*'\K[^']+(?=',)")
           curl_output2=$(curl -k -e "https://callofliberty.fr/" -A "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" -H "Origin: https://callofliberty.fr" $curl_output)
-          echo "$curl_output2" > fr/video6ter.m3u8  # Use single > to overwrite existing content   
+          echo "$curl_output2" > fr/videoinfosportplus.m3u8  # Use single > to overwrite existing content
+      - name: Run Script and Generate M3U8 for VideoInfosportplus
+        run: |
+          curl_output=$(curl -k -s -H "User-Agent: Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" https://callofliberty.fr/tv/22-6ter/22-6ter.php | grep -oP "source:\s*'\K[^']+(?=',)")
+          curl_output2=$(curl -k -e "https://callofliberty.fr/" -A "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" -H "Origin: https://callofliberty.fr" $curl_output)
+          echo "$curl_output2" > fr/video6ter.m3u8  # Use single > to overwrite existing content
       - name: Run Script and Generate M3U8 for F2
         run: |
           curl_output=$(curl -k -s -H "User-Agent: Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" https://callofliberty.fr/tv/2-france.2/2-france.2.php | grep -oP "source:\s*'\K[^']+(?=',)")
@@ -88,6 +93,6 @@ jobs:
           git config --local user.email "kada.developers@gmail.com"
           git config --local user.name "kadadevelopers"
           git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/kadadevelopers/live-m3u8.git
-          git add fr/videotf1.m3u8 fr/videotf1fs.m3u8 fr/videotmc.m3u8 fr/videotfx.m3u8 fr/videocp.m3u8 fr/videow9.m3u8 fr/video6ter.m3u8 fr/videof2.m3u8 fr/videof3.m3u8 fr/videof4.m3u8 fr/videof5.m3u8
+          git add fr/videotf1.m3u8 fr/videotf1fs.m3u8 fr/videotmc.m3u8 fr/videotfx.m3u8 fr/videocp.m3u8 fr/videow9.m3u8 fr/video6ter.m3u8 fr/videoinfosportplus.m3u8 fr/videof2.m3u8 fr/videof3.m3u8 fr/videof4.m3u8 fr/videof5.m3u8
           git commit -m "latest updates"
           git push
