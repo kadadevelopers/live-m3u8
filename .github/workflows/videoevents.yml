@@ -48,6 +48,11 @@ jobs:
           curl_output=$(curl -k -s -H "User-Agent: Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" https://callofliberty.fr/tv/76-CANALPLUS/76-CANALPLUS.php | grep -oP "source:\s*'\K[^']+(?=',)")
           curl_output2=$(curl -k -e "https://callofliberty.fr/" -A "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" -H "Origin: https://callofliberty.fr" $curl_output)
           echo "$curl_output2" > ar/videocp.m3u8  # Use single > to overwrite existing content 
+      - name: Run Script and Generate M3U8 for VideoM6
+        run: |
+          curl_output=$(curl -k -s -H "User-Agent: Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" https://callofliberty.fr/tv/6-M6/6-M6.php | grep -oP "source:\s*'\K[^']+(?=',)")
+          curl_output2=$(curl -k -e "https://callofliberty.fr/" -A "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" -H "Origin: https://callofliberty.fr" $curl_output)
+          echo "$curl_output2" > ar/videom6.m3u8  # Use single > to overwrite existing content
       - name: Run Script and Generate M3U8 for VideoW9
         run: |
           curl_output=$(curl -k -s -H "User-Agent: Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" https://callofliberty.fr/tv/9-W9/9-W9.php | grep -oP "source:\s*'\K[^']+(?=',)")
@@ -173,6 +178,11 @@ jobs:
           curl_output=$(curl -k -s -H "User-Agent: Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" https://callofliberty.fr/tv/308-carac5/308-carac5.php | grep -oP "source:\s*'\K[^']+(?=',)")
           curl_output2=$(curl -k -e "https://callofliberty.fr/" -A "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" -H "Origin: https://callofliberty.fr" $curl_output)
           echo "$curl_output2" > ar/videocarac5.m3u8  # Use single > to overwrite existing content
+      - name: Run Script and Generate M3U8 for Arte
+        run: |
+          curl_output=$(curl -k -s -H "User-Agent: Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" https://callofliberty.fr/tv/7-ARTE/7-ARTE.php | grep -oP "source:\s*'\K[^']+(?=',)")
+          curl_output2=$(curl -k -e "https://callofliberty.fr/" -A "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" -H "Origin: https://callofliberty.fr" $curl_output)
+          echo "$curl_output2" > ar/videoarte.m3u8  # Use single > to overwrite existing content
       - name: Pull changes from remote
         run: git pull origin main          
 
@@ -183,6 +193,6 @@ jobs:
           git config --local user.email "kada.developers@gmail.com"
           git config --local user.name "kadadevelopers"
           git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/kadadevelopers/live-m3u8.git
-          git add ar/videotf1.m3u8 ar/videotf1fs.m3u8 ar/videotmc.m3u8 ar/videotfx.m3u8 ar/videocp.m3u8 ar/videow9.m3u8 ar/videogulli.m3u8 ar/video6ter.m3u8 ar/videoab1.m3u8 ar/videoab3.m3u8 ar/videortl9.m3u8 ar/videotcm.m3u8 ar/videocanalj.m3u8 ar/videocnw.m3u8 ar/videoplanete.m3u8 ar/videoanimaux.m3u8 ar/videorts1.m3u8 ar/videorts2.m3u8 ar/videof2.m3u8 ar/videof3.m3u8 ar/videof4.m3u8 ar/videof5.m3u8 ar/videofranceinfo.m3u8 ar/videotrek.m3u8 ar/videoalpha.m3u8 ar/videocarac1.m3u8 ar/videocarac2.m3u8 ar/videocarac3.m3u8 ar/videocarac4.m3u8 ar/videocarac5.m3u8
+          git add ar/videotf1.m3u8 ar/videotf1fs.m3u8 ar/videotmc.m3u8 ar/videotfx.m3u8 ar/videocp.m3u8 ar/videom6.m3u8 ar/videow9.m3u8 ar/videogulli.m3u8 ar/video6ter.m3u8 ar/videoab1.m3u8 ar/videoab3.m3u8 ar/videortl9.m3u8 ar/videotcm.m3u8 ar/videocanalj.m3u8 ar/videocnw.m3u8 ar/videoplanete.m3u8 ar/videoanimaux.m3u8 ar/videorts1.m3u8 ar/videorts2.m3u8 ar/videof2.m3u8 ar/videof3.m3u8 ar/videof4.m3u8 ar/videof5.m3u8 ar/videofranceinfo.m3u8 ar/videotrek.m3u8 ar/videoalpha.m3u8 ar/videocarac1.m3u8 ar/videocarac2.m3u8 ar/videocarac3.m3u8 ar/videocarac4.m3u8 ar/videocarac5.m3u8 ar/videoarte.m3u8
           git commit -m "latest updates"
           git push
