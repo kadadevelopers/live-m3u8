@@ -1,1 +1,147 @@
-kadatv.online
+<!DOCTYPE html>
+<html lang="fr-FR">
+<head>
+    <meta charset="UTF-8">
+    <title>HLS Player with Auto Token Refresh</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <style>
+        body { font-family: Arial, sans-serif; background: #111; color: #fff; text-align: center; }
+        #videoContainer { margin: 20px auto; width: 80%; max-width: 960px; position: relative; }
+        video { width: 100%; height: auto; background: black; }
+        #loadingOverlay { position: absolute; top:0; left:0; right:0; bottom:0; display:flex; justify-content:center; align-items:center; color:#fff; font-size:20px; background: rgba(0,0,0,0.5); }
+        #tokenTimer { margin-top: 10px; font-size: 16px; }
+    </style>
+</head>
+<body>
+
+<h1>Live HLS Player</h1>
+<div id="videoContainer">
+    <video id="videoPlayer" controls autoplay></video>
+    <div id="loadingOverlay">Loading stream...</div>
+</div>
+<div id="tokenTimer">Token expires in: <span id="timeLeft">--</span> seconds</div>
+
+<script>
+    // ===== CONFIGURATION =====
+    const config = {
+        streamUrl: "https://planetary.lovecdn.ru/beINAR2/index.m3u8?token=YmVJTkFSMnxub19jaGVja19pcHwxNzcwNDYxNjE4.e3b1c28ca6656af7bc882d11f6ac3cee099ec32235a03390db83c71eb83b5064",
+        channelSlug: "beINAR2",
+        tokenExpiresIn: 300, // seconds
+        currentToken: "YmVJTkFSMnxub19jaGVja19pcHwxNzcwNDYxNjE4.e3b1c28ca6656af7bc882d11f6ac3cee099ec32235a03390db83c71eb83b5064",
+        refreshApi: "https://lovetier.bz/api/refresh_token.php" // ضع رابط API الخاص بتجديد التوكن هنا
+    };
+
+    let hls = null;
+    let tokenRefreshTimer = null;
+    let expiryCountdown = null;
+
+    // ===== INITIALIZE PLAYER =====
+    function initPlayer() {
+        const video = document.getElementById('videoPlayer');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+
+        if (Hls.isSupported()) {
+            hls = new Hls({
+                enableWorker: true,
+                lowLatencyMode: true,
+            });
+            hls.loadSource(config.streamUrl);
+            hls.attachMedia(video);
+
+            hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                video.play().catch(e => console.log('Auto-play prevented:', e));
+                loadingOverlay.style.display = 'none';
+            });
+
+            hls.on(Hls.Events.ERROR, (event, data) => {
+                if (data.fatal) {
+                    switch(data.type) {
+                        case Hls.ErrorTypes.NETWORK_ERROR:
+                            console.error('Network error, retrying...');
+                            hls.startLoad();
+                            break;
+                        case Hls.ErrorTypes.MEDIA_ERROR:
+                            console.error('Media error, recovering...');
+                            hls.recoverMediaError();
+                            break;
+                        default:
+                            console.error('Fatal error, cannot recover');
+                            break;
+                    }
+                }
+            });
+
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            video.src = config.streamUrl;
+            video.addEventListener('loadedmetadata', () => loadingOverlay.style.display = 'none');
+        } else {
+            alert('Your browser does not support HLS playback');
+        }
+    }
+
+    // ===== TOKEN REFRESH =====
+    function scheduleTokenRefresh() {
+        const refreshTime = (config.tokenExpiresIn - 30) * 1000; // 30s before expiry
+        tokenRefreshTimer = setTimeout(async () => { await refreshToken(); }, refreshTime);
+    }
+
+    async function refreshToken() {
+        try {
+            const response = await fetch(config.refreshApi, {
+                method: 'POST',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({ channel: config.channelSlug, current_token: config.currentToken })
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                // Update stream URL with new token
+                const newStreamUrl = config.streamUrl.replace(/token=[^&]+/, 'token=' + data.token);
+                config.streamUrl = newStreamUrl;
+                config.currentToken = data.token;
+                config.tokenExpiresIn = data.expires_in;
+
+                // Reload stream
+                if (hls) hls.loadSource(newStreamUrl);
+
+                console.log('Token refreshed successfully');
+                startExpiryCountdown(); // restart countdown
+                scheduleTokenRefresh(); // schedule next refresh
+            } else {
+                console.error('Token refresh failed');
+            }
+        } catch (err) {
+            console.error('Token refresh error:', err);
+        }
+    }
+
+    // ===== COUNTDOWN DISPLAY =====
+    function startExpiryCountdown() {
+        clearInterval(expiryCountdown);
+        const timeEl = document.getElementById('timeLeft');
+        let remaining = config.tokenExpiresIn;
+        timeEl.textContent = remaining;
+        expiryCountdown = setInterval(() => {
+            remaining--;
+            if (remaining <= 0) clearInterval(expiryCountdown);
+            timeEl.textContent = remaining;
+        }, 1000);
+    }
+
+    // ===== PAGE LOAD =====
+    window.addEventListener('DOMContentLoaded', () => {
+        initPlayer();
+        startExpiryCountdown();
+        scheduleTokenRefresh();
+    });
+
+    // ===== CLEANUP =====
+    window.addEventListener('beforeunload', () => {
+        if (hls) hls.destroy();
+        if (tokenRefreshTimer) clearTimeout(tokenRefreshTimer);
+        if (expiryCountdown) clearInterval(expiryCountdown);
+    });
+</script>
+
+</body>
+</html>
