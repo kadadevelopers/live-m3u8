@@ -27,10 +27,23 @@ jobs:
           curl_output=$(curl -k -s -H "User-Agent: Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" https://callofliberty.fr/tv/1-TF1/1-TF1.php | grep -oP "source:\s*'\K[^']+(?=',)")
           curl_output2=$(curl -k -e "https://callofliberty.fr/" -A "User-Agent: Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" -H "Origin: https://callofliberty.fr" $curl_output)
           echo "$curl_output2" > test/videotf1.m3u8  # Use single > to overwrite existing content
-      - name: Run Script and Generate MPD for VideoInfosportplus
+      - name: Generate MPD for INFOSPORTPLUS
         run: |
-          curl_output=$(curl -k -s \ -H "User-Agent: Mozilla/5.0 (Linux; Android 14)" \ https://callofliberty.fr/tv/45-INFOSPORTPLUS/45-INFOSPORTPLUS.php \ | grep -oP "source:\s*'\K[^']+(?=',)")
-          curl -L --compressed \  -e "https://callofliberty.fr/" \ -H "Origin: https://callofliberty.fr" \ -H "Accept: application/dash+xml" \ -A "Mozilla/5.0 (Linux; Android 14)" \ "$curl_output" \ -o fr/videoinfosportplus.mpd
+         curl_output=$(curl -k -s \
+         -H "User-Agent: Mozilla/5.0 (Linux; Android 14)" \
+         https://callofliberty.fr/tv/45-INFOSPORTPLUS/45-INFOSPORTPLUS.php \
+         | grep -oP "source:\s*'\K[^']+(?=',)")
+
+         echo "MPD URL: $curl_output"
+
+         curl -L --compressed \
+         -e "https://callofliberty.fr/" \
+         -H "Origin: https://callofliberty.fr" \
+         -H "Accept: application/dash+xml" \
+         -A "Mozilla/5.0 (Linux; Android 14)" \
+         "$curl_output" \
+         -o test/videoinfosportplus.mpd
+
       - name: Run Script and Generate M3U8 for VideoTF1FS
         run: |
           curl_output=$(curl -k -s -H "User-Agent: Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" https://callofliberty.fr/tv/20-TF1SERIESFILMS/20-TF1SERIESFILMS.php | grep -oP "source:\s*'\K[^']+(?=',)")
