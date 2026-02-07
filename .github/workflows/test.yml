@@ -29,20 +29,25 @@ jobs:
           echo "$curl_output2" > test/videotf1.m3u8  # Use single > to overwrite existing content
       - name: Generate MPD for INFOSPORTPLUS
         run: |
-         curl_output=$(curl -k -s \
-         -H "User-Agent: Mozilla/5.0 (Linux; Android 14)" \
-         https://callofliberty.fr/tv/45-INFOSPORTPLUS/45-INFOSPORTPLUS.php \
-         | grep -oP "source:\s*'\K[^']+(?=',)")
+          curl_output=$(curl -k -s \
+          -H "User-Agent: Mozilla/5.0 (Linux; Android 14)" \
+          https://callofliberty.fr/tv/45-INFOSPORTPLUS/45-INFOSPORTPLUS.php \
+          | grep -oP "source:\s*'\K[^']+(?=',)")
 
-         echo "MPD URL: $curl_output"
+          echo "MPD URL: $curl_output"
 
-         curl -L --compressed \
-         -e "https://callofliberty.fr/" \
-         -H "Origin: https://callofliberty.fr" \
-         -H "Accept: application/dash+xml" \
-         -A "Mozilla/5.0 (Linux; Android 14)" \
-         "$curl_output" \
-         -o test/videoinfosportplus.mpd
+          if [ -z "$curl_output" ]; then
+          echo "ERROR: MPD URL not found"
+          exit 1
+          fi
+
+          curl -L --compressed \
+          -e "https://callofliberty.fr/" \
+          -H "Origin: https://callofliberty.fr" \
+          -H "Accept: application/dash+xml" \
+          -A "Mozilla/5.0 (Linux; Android 14)" \
+          "$curl_output" \
+          -o test/videoinfosportplus.mpd
 
       - name: Run Script and Generate M3U8 for VideoTF1FS
         run: |
