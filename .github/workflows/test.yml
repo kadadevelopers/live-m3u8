@@ -30,7 +30,7 @@ jobs:
       - name: Run Script and Generate MPD for VideoINFOSPORTPLUS
         run: |
           curl_output=$(curl -k -s -H "User-Agent: Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" https://callofliberty.fr/tv/45-INFOSPORTPLUS/45-INFOSPORTPLUS.php | grep -oP "source:\s*'\K[^']+(?=',)")
-          curl -L --compressed -e "https://callofliberty.fr/" -A "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" -H "Origin: https://callofliberty.fr" -H "Accept: application/dash+xml" "$curl_output" > test/videoinfosportplus.mpd
+          curl -k -L --compressed -e "https://callofliberty.fr/" -A "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" -H "Origin: https://callofliberty.fr" -H "Accept: application/dash+xml" "$curl_output" > test/videoinfosportplus.mpd
 
       - name: Run Script and Generate M3U8 for VideoTF1FS
         run: |
