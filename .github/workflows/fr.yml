@@ -224,9 +224,7 @@ jobs:
         run: |
           curl_output=$(curl -k -s -H "User-Agent: Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" https://lovetier.bz/player/beINAR2 | grep -oP 'streamUrl\s*:\s*"\K[^"]+')
           curl_output2=${curl_output//\\\//\/}
-          curl_output3=$(curl -k -e "https://lovetier.bz/" -A "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" -H "Origin: https://lovetier.bz" "https://beautifulpeople.lovecdn.ru/beINAR2/${curl_output2}")
-          echo "$curl_output3" > fr/videobeinar2.m3u8
-
+          echo "$curl_output2" > fr/videobeinar2.m3u8
 
       - name: Pull changes from remote
         run: git pull origin main          
