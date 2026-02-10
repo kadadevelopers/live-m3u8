@@ -2,7 +2,7 @@ name: Run Script AR Every 3 Hours AR
 
 on:
   schedule:
-    - cron: '4 * * * *'  # Run every 3 hours
+    - cron: ' * * * *'  # Run every 3 hours
   workflow_dispatch:      # Enable manual triggering
 
 jobs:
