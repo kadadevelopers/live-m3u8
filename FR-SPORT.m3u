@@ -1,0 +1,47 @@
+#EXTM3U
+#EXTINF:-1 tvg-id="kadatv.online",RMC Sport 1 FR
+https://yacinetv.net/kadaTV/RMCSPORT1FR.m3u8
+#EXTINF:-1 tvg-id="kadatv.online",RMC Sport 2 FR
+https://yacinetv.net/kadaTV/RMCSPORT2FR.m3u8
+#EXTINF:-1 tvg-id="kadatv.online",RMC Sport 3 FR
+https://yacinetv.net/kadaTV/RMCSPORT3FR.m3u8
+#EXTINF:-1 tvg-id="kadatv.online",CANAL+ SPORT FR
+https://yacinetv.net/kadaTV/CANALSPORTFR.m3u8
+#EXTINF:-1 tvg-id="kadatv.online",CANAL+ FOOT FR
+https://yacinetv.net/kadaTV/FOOTPLUSFR.m3u8
+#EXTINF:-1 tvg-id="kadatv.online",INFOSPORT+ FR
+https://yacinetv.net/kadaTV/INFOSPORTFR.m3u8
+#EXTINF:-1 tvg-id="kadatv.online",L'ÉQUIPE FR
+https://yacinetv.net/kadaTV/EQUIPEFR.m3u8
+#EXTINF:-1 tvg-id="kadatv.online",EUROSPORT 1 FR
+https://yacinetv.net/kadaTV/Euro1FR.m3u8
+#EXTINF:-1 tvg-id="kadatv.online",EUROSPORT 2 FR
+https://yacinetv.net/kadaTV/Euro2FR.m3u8
+#EXTINF:-1 tvg-id="kadatv.online",beIN SPORTS 1 FR
+https://yacinetv.net/kadaTV/BEINSPORT1FR.m3u8
+#EXTINF:-1 tvg-id="kadatv.online",beIN SPORTS 2 FR
+https://yacinetv.net/kadaTV/BEINSPORT2FR.m3u8
+#EXTINF:-1 tvg-id="kadatv.online",beIN SPORTS 3 FR
+https://yacinetv.net/kadaTV/BEINSPORT3FR.m3u8
+#EXTINF:-1 tvg-id="kadatv.online",beIN SPORTS Max 4
+https://yacinetv.net/kadaTV/beINMAX4FR.m3u8
+#EXTINF:-1 tvg-id="kadatv.online",beIN SPORTS Max 5
+https://yacinetv.net/kadaTV/beINMAX5FR.m3u8
+#EXTINF:-1 tvg-id="kadatv.online",beIN SPORTS Max 6
+https://yacinetv.net/kadaTV/beINMAX6FR.m3u8
+#EXTINF:-1 tvg-id="kadatv.online",beIN SPORTS Max 7
+https://yacinetv.net/kadaTV/beINMAX7FR.m3u8
+#EXTINF:-1 tvg-id="kadatv.online",beIN SPORTS Max 8
+https://yacinetv.net/kadaTV/beINMAX8FR.m3u8
+#EXTINF:-1 tvg-id="kadatv.online",beIN SPORTS Max 9
+https://yacinetv.net/kadaTV/beINMAX9FR.m3u8
+#EXTINF:-1 tvg-id="kadatv.online",CANAL+ SPORT 1 Afrique
+https://yacinetv.net/kadaTV/CNPLSP1AF.m3u8
+#EXTINF:-1 tvg-id="kadatv.online",CANAL+ SPORT 2 Afrique
+https://yacinetv.net/kadaTV/CNPLSP2AF.m3u8
+#EXTINF:-1 tvg-id="kadatv.online",CANAL+ SPORT 3 Afrique
+https://yacinetv.net/kadaTV/CNPLSP3AF.m3u8
+#EXTINF:-1 tvg-id="kadatv.online",CANAL+ SPORT 4 Afrique
+https://yacinetv.net/kadaTV/CNPLSP4AF.m3u8
+#EXTINF:-1 tvg-id="kadatv.online",CANAL+ SPORT 5 Afrique
+https://yacinetv.net/kadaTV/CNPLSP5AF.m3u8
