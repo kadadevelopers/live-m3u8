@@ -2,6 +2,4 @@
 #EXTINF:-1,News Channel
 https://raw.githubusercontent.com/kadadevelopers/Live/refs/heads/main/FranceTV%20Live.m3u
 #EXTINF:-1,Sports Channel
-http://example.com/live/sports.m3u
-#EXTINF:-1,Movie Channel
-http://example.com/live/movie.m3u
+https://raw.githubusercontent.com/kadadevelopers/live-m3u8/refs/heads/main/FR-SPORT.m3u
