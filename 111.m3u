@@ -1,0 +1,7 @@
+#EXTM3U
+#EXTINF:-1,News Channel
+http://example.com/live/news.m3u
+#EXTINF:-1,Sports Channel
+http://example.com/live/sports.m3u
+#EXTINF:-1,Movie Channel
+http://example.com/live/movie.m3u
