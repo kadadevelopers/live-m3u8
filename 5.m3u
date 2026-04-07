@@ -1,7 +1,0 @@
-#EXTM3U
-#EXTINF:-1,FR Channel
-https://raw.githubusercontent.com/kadadevelopers/Live/refs/heads/main/FranceTV%20Live.m3u
-#EXTINF:-1,Sports FR
-https://raw.githubusercontent.com/kadadevelopers/live-m3u8/refs/heads/main/FR-SPORT.m3u
-#EXTINF:-1,Sports beII
-https://raw.githubusercontent.com/kadadevelopers/live-m3u8/refs/heads/main/beINAR.m3u
