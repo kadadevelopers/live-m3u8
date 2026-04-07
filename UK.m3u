@@ -1,0 +1,95 @@
+#EXTM3U
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",BBC ONE
+https://yacinetv.net/kadaTV/BBCONE.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",BBC TWO
+https://yacinetv.net/kadaTV/BBCTWO.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",BBC Three
+https://yacinetv.net/kadaTV/BBCThree.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",WRC
+https://yacinetv.net/kadaTV/WRC.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",Film4
+https://yacinetv.net/kadaTV/Film4.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",Sky History UK
+https://yacinetv.net/kadaTV/SkyHistoryUK.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",Sky Crime UK
+https://yacinetv.net/kadaTV/SkyCrimeUK.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",Sky Comedy UK
+https://yacinetv.net/kadaTV/SkyComedyUK.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",Sky Arts UK
+https://yacinetv.net/kadaTV/SkyArtsUK.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",Sky Cinema SciFi Horror UK
+https://yacinetv.net/kadaTV/SkyCinemaSciFiHorrorUK.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",Sky Cinema Thriller UK
+https://yacinetv.net/kadaTV/SkyCinemaThrillerUK.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",#Sky Cinema Action UK
+https://yacinetv.net/kadaTV/SkyCinemaActionUK.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",#Sky Cinema Comedy UK
+https://yacinetv.net/kadaTV/SkyCinemaComedyUK.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",Sky Cinema Family UK
+https://yacinetv.net/kadaTV/SkyCinemaFamilyUK.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",Sky Cinema Animation UK
+https://yacinetv.net/kadaTV/SkyCinemaAnimationUK.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",Sky Cinema Hits UK
+https://yacinetv.net/kadaTV/SkyCinemaHitsUK.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",Sky Cinema Select UK
+https://yacinetv.net/kadaTV/SkyCinemaSelectUK.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",Sky Cinema Premiere UK
+https://yacinetv.net/kadaTV/SkyCinemaPremiereUK.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",Sky Sports LaLiga UK
+https://yacinetv.net/kadaTV/ViaplayLaLigaUK.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",Sky Atlantic
+https://yacinetv.net/kadaTV/SkyAtlantic.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",Sky Sports Action
+https://yacinetv.net/kadaTV/skysportsaction.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",Sky Sports Racing
+https://yacinetv.net/kadaTV/SkySportsRacing.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",Sky Spor Tstennis UK
+https://yacinetv.net/kadaTV/skysportstennisuk.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",Sky Sports Mix UK
+https://yacinetv.net/kadaTV/skysportsmixuk.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",Sky Sports Plus UK
+https://yacinetv.net/kadaTV/skysportsplus.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",Sky Sports Action UK
+https://yacinetv.net/kadaTV/skysportsaction.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",Sky Sports Cricket UK
+https://yacinetv.net/kadaTV/skysportscricketuk.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",Sky Sports F1 UK
+https://yacinetv.net/kadaTV/SkySportsF1.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",Sky Sports Premier League UK
+https://yacinetv.net/kadaTV/skysportspremierleague.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",Sky Sports News UK
+https://yacinetv.net/kadaTV/skysportsnews.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",Sky Sports Main Event Live UK
+https://yacinetv.net/kadaTV/skysportsmainevent.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",ITV1
+https://yacinetv.net/kadaTV/ITV1.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",ITV2
+https://yacinetv.net/kadaTV/ITV2.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",ITV3
+https://yacinetv.net/kadaTV/ITV3.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",ITV4
+https://yacinetv.net/kadaTV/ITV4.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",PREMIER SPORTS1
+https://yacinetv.net/kadaTV/PREMIERSPORTS1.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",PREMIER SPORTS2
+https://yacinetv.net/kadaTV/PREMIERSPORTS2.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",TNT SPORTS 1 UK
+https://yacinetv.net/kadaTV/TNT1UK.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",TNT SPORTS 2 UK
+https://yacinetv.net/kadaTV/tntsports2.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",TNT SPORTS 3 UK
+https://yacinetv.net/kadaTV/tntsports3.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",TNT SPORTS 4 UK
+https://yacinetv.net/kadaTV/tntsports4.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",Eurosport1 UK
+https://yacinetv.net/kadaTV/Eurosport1UK.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",Eurosport2 UK
+https://yacinetv.net/kadaTV/Eurosport2UK.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",U&Dave UK
+https://yacinetv.net/kadaTV/Dave.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",MUTV UK
+https://yacinetv.net/kadaTV/MUTV.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",LFCTV UK
+https://yacinetv.net/kadaTV/LFCTV.m3u8
+#EXTINF:-1 tvg-id="kadatv.online" tvg-logo="#####" group-title="General",RacingTV
+https://yacinetv.net/kadaTV/RacingTV.m3u8
