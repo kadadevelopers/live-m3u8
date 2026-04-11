@@ -232,7 +232,7 @@ jobs:
 
       - name: Commit and Push Changes
         env:
-         GITHUB_TOKEN: ${{ secrets.KADATV }}  # Use the stored PAT secret
+         GITHUB_TOKEN: ${{ secrets.KADA_TOKEN }}  # Use the stored PAT secret
         run: |
           git config --local user.email "kada.developers@gmail.com"
           git config --local user.name "kadadevelopers"
