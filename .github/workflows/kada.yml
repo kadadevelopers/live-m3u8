@@ -1,9 +1,12 @@
-name: kadaTV Resolver
+name: KadaTV Resolver AR
 
 on:
-  workflow_dispatch:
   schedule:
     - cron: "0 */3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   run:
@@ -11,42 +14,25 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
-      - name: Create output folder
-        run: mkdir -p output
+      - name: Create folders
+        run: mkdir -p ar
 
-      - name: Resolve Streams
+      - name: Resolver + Tracker
         run: |
-          UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
+          UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36 OPR/120.0.0.0"
           REFERER="https://thisnot.business/"
           ORIGIN="https://thisnot.business"
+          MEASUREMENT_ID="G-99RFJ7M3Z0"
+          API_SECRET="1_41eyDOSo6nm8JdD8fBNQ"
 
-          resolve_stream () {
-            CODE=$1
-
-            PAGE=$(curl -k -s -H "User-Agent: $UA" -H "Referer: $REFERER" https://popcdn.day/player/$CODE)
-
-            TOKEN=$(echo "$PAGE" | grep -oP 'currentToken:\s*"\K[^"]+')
-
-            if [ -z "$TOKEN" ]; then
-              echo "Error resolving $CODE"
-              return
-            fi
-
-            BASE="https://beautifulpeople.lovetier.bz/$CODE/tracks-v1a1/"
-            FINAL="${BASE}mono.m3u8?token=${TOKEN}"
-
-            PLAYLIST=$(curl -k -s -H "User-Agent: $UA" -H "Referer: $REFERER" -H "Origin: $ORIGIN" "$FINAL")
-
-            echo "$PLAYLIST" | sed -E "s#([0-9]{4}/[0-9]{2}/[0-9]{2}/.*\.ts\?token=.*)#${BASE}\1#g" > output/${CODE}.m3u8
-          }
+          CHANNELS=("beINAR2")
 
           track_visit () {
             CHANNEL=$1
-            UA="$UA"
-            IP="127.0.0.1"
 
+            IP="127.0.0.1"
             CLIENT_ID=$(echo -n "$IP$UA" | md5sum | awk '{print $1}')
 
             DEVICE_TYPE="desktop"
@@ -63,43 +49,61 @@ jobs:
             DEVICE_MODEL="unknown"
 
             DATA=$(cat <<EOF
- {
+{
   "client_id": "$CLIENT_ID",
   "user_agent": "$UA",
   "ip_override": "$IP",
-  "events": [{
-    "name": "channel_view",
-    "params": {
-      "channel_name": "$CHANNEL",
-      "device_type": "$DEVICE_TYPE",
-      "os": "$OS",
-      "device_model": "$DEVICE_MODEL",
-      "engagement_time_msec": 100
+  "events": [
+    {
+      "name": "channel_view",
+      "params": {
+        "channel_name": "$CHANNEL",
+        "device_type": "$DEVICE_TYPE",
+        "os": "$OS",
+        "device_model": "$DEVICE_MODEL",
+        "engagement_time_msec": 100
       }
-    }]
+    }
+  ]
 }
 EOF
 )
 
-            curl -s -X POST "https://www.google-analytics.com/mp/collect?measurement_id=G-99RFJ7M3Z0&api_secret=1_41eyDOSo6nm8JdD8fBNQ" \
+            curl -s -X POST "https://www.google-analytics.com/mp/collect?measurement_id=$MEASUREMENT_ID&api_secret=$API_SECRET" \
               -H "Content-Type: application/json" \
               -H "User-Agent: $UA" \
               -d "$DATA" > /dev/null
           }
 
-          CHANNELS=("beINAR2" "TF1" "M6")
+          resolve_stream () {
+            CODE=$1
+
+            PAGE=$(curl -k -s -H "User-Agent: $UA" -H "Referer: $REFERER" https://popcdn.day/player/$CODE)
+
+            TOKEN=$(echo "$PAGE" | grep -oP 'currentToken:\s*"\K[^"]+')
+
+            if [ -z "$TOKEN" ]; then
+              echo "No token for $CODE"
+              return
+            fi
+
+            BASE="https://beautifulpeople.lovetier.bz/$CODE/tracks-v1a1/"
+            FINAL="${BASE}mono.m3u8?token=${TOKEN}"
+
+            PLAYLIST=$(curl -k -s -H "User-Agent: $UA" -H "Referer: $REFERER" -H "Origin: $ORIGIN" "$FINAL")
+
+            echo "$PLAYLIST" | sed -E "s#([0-9]{4}/[0-9]{2}/[0-9]{2}/.*\.ts\?token=.*)#${BASE}\1#g" > ar/${CODE}.m3u8
+          }
 
           for CH in "${CHANNELS[@]}"; do
             track_visit "$CH"
             resolve_stream "$CH"
           done
 
-      - name: Commit results
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Commit
         run: |
           git config --local user.email "bot@github.com"
           git config --local user.name "github-actions"
-          git add output/*.m3u8
-          git commit -m "update streams" || echo "no changes"
+          git add ar/*.m3u8
+          git commit -m "update ar streams" || echo "no changes"
           git push
