@@ -1,4 +1,4 @@
-name: Run Script TNT Every 6 Hours FR
+name: Run Script TNT Every 3 Hours FR
 
 on:
   schedule:
@@ -15,74 +15,87 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-        with:
-          ref: main
 
-      - name: Create fr Folder
-        run: mkdir -p fr
-
-      - name: Create txt Folder
-        run: mkdir -p txt        
-
-      - name: Run Script and Generate M3U8 for VideoTF1
+      - name: Create folders
         run: |
-          set +e
-          curl_output=$(curl -k -s -H "User-Agent: Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" https://callofliberty.fr/tv/1-TF1/1-TF1.php | grep -oP "source:\s*'\K[^']+(?=',)") || true
-          curl_output2=$(curl -k -e "https://callofliberty.fr/" -A "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" -H "Origin: https://callofliberty.fr" "$curl_output") || true
-          if [ -n "$curl_output2" ]; then
-            echo "$curl_output2" > fr/videotf1.m3u8
-          else
-            echo "Skip TF1"
-          fi
+          mkdir -p fr
+          mkdir -p txt
 
-      - name: Run Script and Generate M3U8 for VideoTF1FS
+      - name: Generate All Channels
         run: |
-          set +e
-          curl_output=$(curl -k -s -H "User-Agent: Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" https://callofliberty.fr/tv/20-TF1SERIESFILMS/20-TF1SERIESFILMS.php | grep -oP "source:\s*'\K[^']+(?=',)") || true
-          curl_output2=$(curl -k -e "https://callofliberty.fr/" -A "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" -H "Origin: https://callofliberty.fr" "$curl_output") || true
-          if [ -n "$curl_output2" ]; then
-            echo "$curl_output2" > fr/videotf1fs.m3u8
-          else
-            echo "Skip TF1FS"
-          fi
+          USER_AGENT="Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36"
 
-      - name: Run Script and Generate M3U8 for VideoTMC
+          declare -A CHANNELS=(
+            [videotf1]="https://callofliberty.fr/tv/1-TF1/1-TF1.php"
+            [videotf1fs]="https://callofliberty.fr/tv/20-TF1SERIESFILMS/20-TF1SERIESFILMS.php"
+            [videotfx]="https://callofliberty.fr/tv/11-TFX/11-TFX.php"
+            [videolci]="https://callofliberty.fr/tv/15-LCI/15-LCI.php"
+            [videocp]="https://callofliberty.fr/tv/76-CANALPLUS/76-CANALPLUS.php"
+            [videom6]="https://callofliberty.fr/tv/6-M6/6-M6.php"
+            [videow9]="https://callofliberty.fr/tv/9-W9/9-W9.php"
+            [videogulli]="https://callofliberty.fr/tv/12-Gulli/12-Gulli.php"
+            [video6ter]="https://callofliberty.fr/tv/22-6ter/22-6ter.php"
+            [videoab1]="https://callofliberty.fr/tv/101-AB1/101-AB1.php"
+            [videoab3]="https://callofliberty.fr/tv/328-AB3/328-AB3.php"
+            [videortl9]="https://callofliberty.fr/tv/99-RTL9/99-RTL9.php"
+            [videormcstory]="https://callofliberty.fr/tv/23-RMCSTORY/23-RMCSTORY.php"
+            [videormclife]="https://callofliberty.fr/tv/25-RMCLIFE/25-RMCLIFE.php"
+            [videormcdecouverte]="https://callofliberty.fr/tv/24-RMCDECOUVERTE/24-RMCDECOUVERTE.php"
+            [videotcm]="https://callofliberty.fr/tv/102-TCMCINEMA/102-TCMCINEMA.php"
+            [videocanalj]="https://callofliberty.fr/tv/62-CanalJ/62-CanalJ.php"
+            [videocnw]="https://callofliberty.fr/tv/64-CARTOONNETWORK/64-CARTOONNETWORK.php"
+            [videoplanete]="https://callofliberty.fr/tv/130-PLANETEPLUS/130-PLANETEPLUS.php"
+            [videoanimaux]="https://callofliberty.fr/tv/136-ANIMAUX/136-ANIMAUX.php"
+            [videorts1]="https://callofliberty.fr/tv/301-RTS1/301-RTS1.php"
+            [videorts2]="https://callofliberty.fr/tv/302-RTS2/302-RTS2.php"
+            [videof2]="https://callofliberty.fr/tv/2-france.2/2-france.2.php"
+            [videof3]="https://callofliberty.fr/tv/3-france.3/3-france.3.php"
+            [videof4]="https://callofliberty.fr/tv/4-france.4/4-france.4.php"
+            [videof5]="https://callofliberty.fr/tv/5-france.5/5-france.5.php"
+            [videofranceinfo]="https://callofliberty.fr/tv/16-franceinfo/16-franceinfo.php"
+            [videotrek]="https://callofliberty.fr/tv/212-Trek/212-Trek.php"
+            [videoalpha]="https://callofliberty.fr/tv/299-canalalpha/299-canalalpha.php"
+            [videocarac1]="https://callofliberty.fr/tv/304-carac1/304-carac1.php"
+            [videocarac2]="https://callofliberty.fr/tv/305-carac2/305-carac2.php"
+            [videocarac3]="https://callofliberty.fr/tv/306-carac3/306-carac3.php"
+            [videocarac4]="https://callofliberty.fr/tv/307-carac4/307-carac4.php"
+            [videocarac5]="https://callofliberty.fr/tv/308-carac5/308-carac5.php"
+            [videoarte]="https://callofliberty.fr/tv/7-ARTE/7-ARTE.php"
+            [videomtv]="https://callofliberty.fr/tv/112-MTV/112-MTV.php"
+            [videomezzo]="https://callofliberty.fr/tv/147-mezzo/147-mezzo.php"
+            [videotvm3]="https://callofliberty.fr/tv/303-tvm3/303-tvm3.php"
+          )
+
+          for key in "${!CHANNELS[@]}"; do
+            url="${CHANNELS[$key]}"
+            echo "Processing $key"
+
+            stream=$(curl -k -s -H "User-Agent: $USER_AGENT" "$url" | grep -oP "source:\s*'\K[^']+(?=',)")
+
+            curl -k -s \
+              -e "https://callofliberty.fr/" \
+              -A "$USER_AGENT" \
+              -H "Origin: https://callofliberty.fr" \
+              "$stream" > "fr/$key.m3u8"
+          done
+
+      - name: Special Case (TMC)
         run: |
-          set +e
-          curl_output=$(curl -k -s -H "User-Agent: Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" https://callofliberty.fr/tv/1-TF1/1-TF1.php | grep -oP "source:\s*'\K[^']+(?=',)" | sed 's|TF1|TMC|g') || true
-          curl_output2=$(curl -k -e "https://callofliberty.fr/" -A "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" -H "Origin: https://callofliberty.fr" "$curl_output") || true
-          if [ -n "$curl_output2" ]; then
-            echo "$curl_output2" > fr/videotmc.m3u8
-          else
-            echo "Skip TMC"
-          fi
+          USER_AGENT="Mozilla/5.0 (Linux; Android 14)"
+          stream=$(curl -k -s -H "User-Agent: $USER_AGENT" https://callofliberty.fr/tv/1-TF1/1-TF1.php | grep -oP "source:\s*'\K[^']+(?=',)" | sed 's|TF1|TMC|g')
 
-      - name: Run Script and Generate M3U8 for VideoTFX
+          curl -k -s -e "https://callofliberty.fr/" -A "$USER_AGENT" -H "Origin: https://callofliberty.fr" "$stream" > fr/videotmc.m3u8
+
+      - name: Special Case (beIN)
         run: |
-          set +e
-          curl_output=$(curl -k -s -H "User-Agent: Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" https://callofliberty.fr/tv/11-TFX/11-TFX.php | grep -oP "source:\s*'\K[^']+(?=',)") || true
-          curl_output2=$(curl -k -e "https://callofliberty.fr/" -A "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" -H "Origin: https://callofliberty.fr" "$curl_output") || true
-          if [ -n "$curl_output2" ]; then
-            echo "$curl_output2" > fr/videotfx.m3u8
-          else
-            echo "Skip TFX"
-          fi
+          stream=$(curl -k -s https://lovetier.bz/player/beINAR2 | grep -oP 'streamUrl\s*:\s*"\K[^"]+' | sed 's/\\//g')
 
-      - name: Run Script and Generate M3U8 for VideoBeinAR2
-        run: |
-          set +e
-          curl_output=$(curl -k -s -H "User-Agent: Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" https://lovetier.bz/player/beINAR2 | grep -oP 'streamUrl\s*:\s*"\K[^"]+') || true
-          stream_url=${curl_output//\\\//\/}
-          if [ -n "$stream_url" ]; then
-            curl -k -s -e "https://lovetier.bz/" -A "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" -H "Origin: https://lovetier.bz" "$stream_url" -o fr/videobeinar2.m3u8 || true
-          else
-            echo "Skip BeinAR2"
-          fi
+          curl -k -s -e "https://lovetier.bz/" -H "Origin: https://lovetier.bz" "$stream" -o fr/videobeinar2.m3u8
 
-      - name: Commit and Push Changes
+      - name: Commit and Push
         run: |
           git config --local user.email "kada.developers@gmail.com"
           git config --local user.name "kadadevelopers"
           git add fr/*.m3u8
-          git commit -m "latest updates" || echo "No changes"
+          git commit -m "auto update channels" || echo "No changes"
           git push
