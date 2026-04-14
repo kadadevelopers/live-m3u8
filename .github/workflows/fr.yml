@@ -1,4 +1,4 @@
-name: Extract TF1 Stream via Browser
+name: Extract TF1 Final Stream FIXED
 
 on:
   schedule:
@@ -16,88 +16,35 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
+      - name: Install tools
+        run: sudo apt-get update && sudo apt-get install -y curl grep
 
-      - name: Install Puppeteer
-        run: npm install puppeteer
-
-      - name: Run Browser Scraper
+      - name: Extract FINAL m3u8 (redirect-safe)
         run: |
-          node << 'EOF'
-          const puppeteer = require("puppeteer");
-          const fs = require("fs");
+          mkdir -p fr
 
-          (async () => {
-            const browser = await puppeteer.launch({
-              headless: "new",
-              args: ["--no-sandbox", "--disable-setuid-sandbox"]
-            });
+          echo "🚀 Fetching page..."
 
-            const page = await browser.newPage();
+          page=$(curl -s -L "https://callofliberty.fr/tv/1-TF1/1-TF1.php")
 
-            let foundUrl = null;
+          master=$(echo "$page" | grep -oP "https://s2\.callofliberty\.fr/streams/TF1/master\.m3u8\?[^'\"]+" | head -1)
 
-            console.log("🚀 Opening page...");
+          if [ -z "$master" ]; then
+            echo "❌ Master not found"
+            exit 1
+          fi
 
-            // 🎯 التقاط requests + responses
-            page.on("request", request => {
-              const url = request.url();
+          echo "📡 MASTER:"
+          echo "$master"
 
-              if (
-                url.includes(".m3u8") ||
-                url.includes("tf1-cmaf") ||
-                url.includes("diff.tf1.fr")
-              ) {
-                console.log("📡 REQUEST:", url);
-                foundUrl = url;
-              }
-            });
+          echo "🔁 Following redirects to FINAL CDN..."
 
-            page.on("response", response => {
-              const url = response.url();
+          final=$(curl -s -L -o /dev/null -w "%{url_effective}" "$master")
 
-              if (url.includes(".m3u8")) {
-                console.log("📥 RESPONSE:", url);
-                foundUrl = url;
-              }
-            });
+          echo "✅ FINAL URL:"
+          echo "$final"
 
-            await page.setUserAgent(
-              "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36"
-            );
-
-            await page.goto(
-              "https://callofliberty.fr/tv/1-TF1/1-TF1.php",
-              { waitUntil: "domcontentloaded", timeout: 60000 }
-            );
-
-            // 🎯 وقت كافي لتشغيل المشغل
-            await new Promise(r => setTimeout(r, 15000));
-
-            // 🎯 محاولة trigger للفيديو
-            try {
-              await page.mouse.click(200, 200);
-            } catch (e) {}
-
-            await new Promise(r => setTimeout(r, 5000));
-
-            await browser.close();
-
-            if (!foundUrl) {
-              console.log("❌ No m3u8 found");
-              process.exit(1);
-            }
-
-            console.log("✅ FINAL URL:", foundUrl);
-
-            fs.mkdirSync("fr", { recursive: true });
-            fs.writeFileSync("fr/videotf1.m3u8", foundUrl);
-
-          })();
-          EOF
+          echo "$final" > fr/videotf1.m3u8
 
       - name: Commit
         run: |
