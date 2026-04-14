@@ -23,40 +23,28 @@ jobs:
           mkdir -p fr
           mkdir -p txt
 
-      - name: Extract TF1 M3U8 and Download
+      - name: Fetch TF1 Stream Directly
         run: |
-          echo "Fetching main page..."
+          echo "Fetching master playlist..."
 
-          page=$(curl -k -s -L \
-            -H "User-Agent: Mozilla/5.0 (Linux; Android 14)" \
-            "https://callofliberty.fr/tv/1-TF1/1-TF1.php")
+          url="https://s2.callofliberty.fr/streams/TF1/master.m3u8?callofliberty=$(date +%s)"
 
-          echo "Searching for stream URL..."
+          echo "URL: $url"
 
-          url=$(echo "$page" | grep -oE 'https?://[^\"'\'' ]+\.m3u8[^\"'\'' ]*' | head -n 1)
-
-          if [ -z "$url" ]; then
-            echo "❌ No m3u8 found!"
-            exit 1
-          fi
-
-          echo "Found URL: $url"
-
-          echo "Downloading stream..."
-          stream=$(curl -k -s -L \
-            -e "https://callofliberty.fr/" \
-            -H "User-Agent: Mozilla/5.0 (Linux; Android 14)" \
+          stream=$(curl -k -L -s \
+            -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)" \
+            -H "Referer: https://callofliberty.fr/" \
             -H "Origin: https://callofliberty.fr" \
             "$url")
 
           if [ -z "$stream" ]; then
-            echo "❌ Failed to fetch stream content"
+            echo "❌ Failed to fetch stream"
             exit 1
           fi
 
           echo "$stream" > fr/videotf1.m3u8
 
-          echo "✅ Done"
+          echo "✅ TF1 stream saved"
 
       - name: Commit and Push Changes
         run: |
