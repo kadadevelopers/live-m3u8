@@ -40,33 +40,51 @@ jobs:
 
             let foundUrl = null;
 
-            // التقاط كل الطلبات الشبكية
-            page.on("response", async (response) => {
-              try {
-                const url = response.url();
+            console.log("🚀 Opening page...");
 
-                if (url.includes(".m3u8")) {
-                  console.log("FOUND:", url);
-                  foundUrl = url;
-                }
-              } catch (e) {}
+            // 🎯 التقاط requests + responses
+            page.on("request", request => {
+              const url = request.url();
+
+              if (
+                url.includes(".m3u8") ||
+                url.includes("tf1-cmaf") ||
+                url.includes("diff.tf1.fr")
+              ) {
+                console.log("📡 REQUEST:", url);
+                foundUrl = url;
+              }
+            });
+
+            page.on("response", response => {
+              const url = response.url();
+
+              if (url.includes(".m3u8")) {
+                console.log("📥 RESPONSE:", url);
+                foundUrl = url;
+              }
             });
 
             await page.setUserAgent(
               "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36"
             );
 
-            console.log("Opening page...");
-
             await page.goto(
-            "https://callofliberty.fr/tv/1-TF1/1-TF1.php",
-            { waitUntil: "networkidle2", timeout: 60000 }
+              "https://callofliberty.fr/tv/1-TF1/1-TF1.php",
+              { waitUntil: "domcontentloaded", timeout: 60000 }
             );
 
-           // بدل waitForTimeout
-           await new Promise(r => setTimeout(r, 10000));
+            // 🎯 وقت كافي لتشغيل المشغل
+            await new Promise(r => setTimeout(r, 15000));
 
-           await browser.close();
+            // 🎯 محاولة trigger للفيديو
+            try {
+              await page.mouse.click(200, 200);
+            } catch (e) {}
+
+            await new Promise(r => setTimeout(r, 5000));
+
+            await browser.close();
 
             if (!foundUrl) {
               console.log("❌ No m3u8 found");
@@ -75,6 +93,7 @@ jobs:
 
             console.log("✅ FINAL URL:", foundUrl);
 
+            fs.mkdirSync("fr", { recursive: true });
             fs.writeFileSync("fr/videotf1.m3u8", foundUrl);
 
           })();
