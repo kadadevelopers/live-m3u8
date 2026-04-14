@@ -1,4 +1,4 @@
-name: Run Script TNT Every 3 Hours FR
+name: Run Script TNT Every 6 Hours FR
 
 on:
   schedule:
@@ -15,128 +15,125 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          ref: main
 
-      - name: Create folders
+      - name: Create fr Folder
+        run: mkdir -p fr
+
+      - name: Create txt Folder
+        run: mkdir -p txt        
+
+      # =========================
+      # FUNCTION SAFE FETCH
+      # =========================
+      - name: Define Safe Function
         run: |
-          mkdir -p fr
-          mkdir -p txt
+          cat << 'EOF' > safe_fetch.sh
+          fetch_channel() {
+            NAME=$1
+            URL=$2
 
-      - name: Generate All Channels (Ultra Safe Mode)
-        run: |
-          set +e  # 🔥 لا توقف مهما حدث
+            echo "Processing $NAME"
 
-          USER_AGENT="Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36"
-
-          fetch_with_retry() {
-            local url=$1
-            local referer=$2
-            local output=$3
-
-            for i in 1 2 3; do
-              echo "🔁 Retry $i..."
-
-              timeout 25 curl -k -s \
-                -e "$referer" \
-                -A "$USER_AGENT" \
-                -H "Origin: $referer" \
-                "$url" > "$output" 2>/dev/null || true
-
-              if [ -s "$output" ]; then
-                return 0
-              fi
-            done
-
-            return 1
-          }
-
-          declare -A CHANNELS=(
-            [videotf1]="https://callofliberty.fr/tv/1-TF1/1-TF1.php"
-            [videotf1fs]="https://callofliberty.fr/tv/20-TF1SERIESFILMS/20-TF1SERIESFILMS.php"
-            [videotfx]="https://callofliberty.fr/tv/11-TFX/11-TFX.php"
-            [videolci]="https://callofliberty.fr/tv/15-LCI/15-LCI.php"
-            [videocp]="https://callofliberty.fr/tv/76-CANALPLUS/76-CANALPLUS.php"
-            [videom6]="https://callofliberty.fr/tv/6-M6/6-M6.php"
-            [videow9]="https://callofliberty.fr/tv/9-W9/9-W9.php"
-            [videogulli]="https://callofliberty.fr/tv/12-Gulli/12-Gulli.php"
-            [video6ter]="https://callofliberty.fr/tv/22-6ter/22-6ter.php"
-            [videoab1]="https://callofliberty.fr/tv/101-AB1/101-AB1.php"
-            [videoab3]="https://callofliberty.fr/tv/328-AB3/328-AB3.php"
-            [videortl9]="https://callofliberty.fr/tv/99-RTL9/99-RTL9.php"
-            [videormcstory]="https://callofliberty.fr/tv/23-RMCSTORY/23-RMCSTORY.php"
-            [videormclife]="https://callofliberty.fr/tv/25-RMCLIFE/25-RMCLIFE.php"
-            [videormcdecouverte]="https://callofliberty.fr/tv/24-RMCDECOUVERTE/24-RMCDECOUVERTE.php"
-            [videotcm]="https://callofliberty.fr/tv/102-TCMCINEMA/102-TCMCINEMA.php"
-            [videocanalj]="https://callofliberty.fr/tv/62-CanalJ/62-CanalJ.php"
-            [videocnw]="https://callofliberty.fr/tv/64-CARTOONNETWORK/64-CARTOONNETWORK.php"
-            [videoplanete]="https://callofliberty.fr/tv/130-PLANETEPLUS/130-PLANETEPLUS.php"
-            [videoanimaux]="https://callofliberty.fr/tv/136-ANIMAUX/136-ANIMAUX.php"
-            [videorts1]="https://callofliberty.fr/tv/301-RTS1/301-RTS1.php"
-            [videorts2]="https://callofliberty.fr/tv/302-RTS2/302-RTS2.php"
-            [videof2]="https://callofliberty.fr/tv/2-france.2/2-france.2.php"
-            [videof3]="https://callofliberty.fr/tv/3-france.3/3-france.3.php"
-            [videof4]="https://callofliberty.fr/tv/4-france.4/4-france.4.php"
-            [videof5]="https://callofliberty.fr/tv/5-france.5/5-france.5.php"
-            [videofranceinfo]="https://callofliberty.fr/tv/16-franceinfo/16-franceinfo.php"
-            [videotrek]="https://callofliberty.fr/tv/212-Trek/212-Trek.php"
-            [videoalpha]="https://callofliberty.fr/tv/299-canalalpha/299-canalalpha.php"
-            [videocarac1]="https://callofliberty.fr/tv/304-carac1/304-carac1.php"
-            [videocarac2]="https://callofliberty.fr/tv/305-carac2/305-carac2.php"
-            [videocarac3]="https://callofliberty.fr/tv/306-carac3/306-carac3.php"
-            [videocarac4]="https://callofliberty.fr/tv/307-carac4/307-carac4.php"
-            [videocarac5]="https://callofliberty.fr/tv/308-carac5/308-carac5.php"
-            [videoarte]="https://callofliberty.fr/tv/7-ARTE/7-ARTE.php"
-            [videomtv]="https://callofliberty.fr/tv/112-MTV/112-MTV.php"
-            [videomezzo]="https://callofliberty.fr/tv/147-mezzo/147-mezzo.php"
-            [videotvm3]="https://callofliberty.fr/tv/303-tvm3/303-tvm3.php"
-          )
-
-          for key in "${!CHANNELS[@]}"; do
-            url="${CHANNELS[$key]}"
-            echo "=============================="
-            echo "Processing $key"
-
-            # استخراج الرابط (مع حماية)
-            stream=$(timeout 20 curl -k -s -H "User-Agent: $USER_AGENT" "$url" 2>/dev/null | grep -oP "source:\s*'\K[^']+(?=',)" || true)
+            stream=$(curl -k -s -H "User-Agent: Mozilla/5.0" "$URL" \
+              | grep -oP "source:\s*'\K[^']+" \
+              | grep -E "m3u8" \
+              | head -n 1)
 
             if [ -z "$stream" ]; then
-              echo "❌ Failed to extract stream for $key"
-              continue
+              echo "❌ Failed (no stream) $NAME"
+              return 0
             fi
 
-            # تحميل مع retry
-            fetch_with_retry "$stream" "https://callofliberty.fr/" "fr/$key.m3u8"
+            curl -k -s \
+              -e "https://callofliberty.fr/" \
+              -A "Mozilla/5.0" \
+              -H "Origin: https://callofliberty.fr" \
+              "$stream" > "fr/$NAME.m3u8" || true
 
-            if [ ! -s "fr/$key.m3u8" ]; then
-              echo "❌ Empty or failed $key"
-              rm -f "fr/$key.m3u8"
-              continue
+            if [ ! -s "fr/$NAME.m3u8" ]; then
+              echo "❌ Empty file $NAME"
+              rm -f "fr/$NAME.m3u8"
+              return 0
             fi
 
-            echo "✅ Done $key"
-          done
+            echo "✅ Done $NAME"
+          }
+          EOF
 
-      - name: Special Case (TMC)
+      # =========================
+      # CHANNELS (SAFE)
+      # =========================
+      - name: Run All Channels Safely
         run: |
-          set +e
-          stream=$(curl -k -s https://callofliberty.fr/tv/1-TF1/1-TF1.php | grep -oP "source:\s*'\K[^']+(?=',)" | sed 's|TF1|TMC|g' || true)
+          source safe_fetch.sh
 
-          if [ -n "$stream" ]; then
-            timeout 20 curl -k -s -e "https://callofliberty.fr/" -H "Origin: https://callofliberty.fr" "$stream" > fr/videotmc.m3u8 || true
-          fi
+          fetch_channel videotf1 https://callofliberty.fr/tv/1-TF1/1-TF1.php
+          fetch_channel videotf1fs https://callofliberty.fr/tv/20-TF1SERIESFILMS/20-TF1SERIESFILMS.php
+          fetch_channel videotfx https://callofliberty.fr/tv/11-TFX/11-TFX.php
+          fetch_channel videolci https://callofliberty.fr/tv/15-LCI/15-LCI.php
+          fetch_channel videocp https://callofliberty.fr/tv/76-CANALPLUS/76-CANALPLUS.php
+          fetch_channel videom6 https://callofliberty.fr/tv/6-M6/6-M6.php
+          fetch_channel videow9 https://callofliberty.fr/tv/9-W9/9-W9.php
+          fetch_channel videogulli https://callofliberty.fr/tv/12-Gulli/12-Gulli.php
+          fetch_channel video6ter https://callofliberty.fr/tv/22-6ter/22-6ter.php
+          fetch_channel videoab1 https://callofliberty.fr/tv/101-AB1/101-AB1.php
+          fetch_channel videoab3 https://callofliberty.fr/tv/328-AB3/328-AB3.php
+          fetch_channel videortl9 https://callofliberty.fr/tv/99-RTL9/99-RTL9.php
+          fetch_channel videormcstory https://callofliberty.fr/tv/23-RMCSTORY/23-RMCSTORY.php
+          fetch_channel videormclife https://callofliberty.fr/tv/25-RMCLIFE/25-RMCLIFE.php
+          fetch_channel videormcdecouverte https://callofliberty.fr/tv/24-RMCDECOUVERTE/24-RMCDECOUVERTE.php
+          fetch_channel videotcm https://callofliberty.fr/tv/102-TCMCINEMA/102-TCMCINEMA.php
+          fetch_channel videocanalj https://callofliberty.fr/tv/62-CanalJ/62-CanalJ.php
+          fetch_channel videocnw https://callofliberty.fr/tv/64-CARTOONNETWORK/64-CARTOONNETWORK.php
+          fetch_channel videoplanete https://callofliberty.fr/tv/130-PLANETEPLUS/130-PLANETEPLUS.php
+          fetch_channel videoanimaux https://callofliberty.fr/tv/136-ANIMAUX/136-ANIMAUX.php
+          fetch_channel videorts1 https://callofliberty.fr/tv/301-RTS1/301-RTS1.php
+          fetch_channel videorts2 https://callofliberty.fr/tv/302-RTS2/302-RTS2.php
+          fetch_channel videof2 https://callofliberty.fr/tv/2-france.2/2-france.2.php
+          fetch_channel videof3 https://callofliberty.fr/tv/3-france.3/3-france.3.php
+          fetch_channel videof4 https://callofliberty.fr/tv/4-france.4/4-france.4.php
+          fetch_channel videof5 https://callofliberty.fr/tv/5-france.5/5-france.5.php
+          fetch_channel videofranceinfo https://callofliberty.fr/tv/16-franceinfo/16-franceinfo.php
+          fetch_channel videotrek https://callofliberty.fr/tv/212-Trek/212-Trek.php
+          fetch_channel videoalpha https://callofliberty.fr/tv/299-canalalpha/299-canalalpha.php
+          fetch_channel videocarac1 https://callofliberty.fr/tv/304-carac1/304-carac1.php
+          fetch_channel videocarac2 https://callofliberty.fr/tv/305-carac2/305-carac2.php
+          fetch_channel videocarac3 https://callofliberty.fr/tv/306-carac3/306-carac3.php
+          fetch_channel videocarac4 https://callofliberty.fr/tv/307-carac4/307-carac4.php
+          fetch_channel videocarac5 https://callofliberty.fr/tv/308-carac5/308-carac5.php
+          fetch_channel videoarte https://callofliberty.fr/tv/7-ARTE/7-ARTE.php
+          fetch_channel videomtv https://callofliberty.fr/tv/112-MTV/112-MTV.php
+          fetch_channel videomezzo https://callofliberty.fr/tv/147-mezzo/147-mezzo.php
+          fetch_channel videotvm3 https://callofliberty.fr/tv/303-tvm3/303-tvm3.php
 
-      - name: Special Case (beIN)
+      # =========================
+      # SPECIAL CASES
+      # =========================
+      - name: Special Case TMC
         run: |
-          set +e
-          stream=$(curl -k -s https://lovetier.bz/player/beINAR2 | grep -oP 'streamUrl\s*:\s*"\K[^"]+' | sed 's/\\//g' || true)
+          stream=$(curl -k -s https://callofliberty.fr/tv/1-TF1/1-TF1.php \
+            | grep -oP "source:\s*'\K[^']+" \
+            | grep m3u8 | head -n1 | sed 's|TF1|TMC|g')
 
-          if [ -n "$stream" ]; then
-            timeout 20 curl -k -s -e "https://lovetier.bz/" -H "Origin: https://lovetier.bz" "$stream" -o fr/videobeinar2.m3u8 || true
-          fi
+          [ -n "$stream" ] && curl -k -s "$stream" > fr/videotmc.m3u8 || true
 
-      - name: Commit and Push
+      - name: Special Case beIN
+        run: |
+          stream=$(curl -k -s https://lovetier.bz/player/beINAR2 \
+            | grep -oP 'streamUrl\s*:\s*"\K[^"]+' \
+            | sed 's/\\//g')
+
+          [ -n "$stream" ] && curl -k -s "$stream" -o fr/videobeinar2.m3u8 || true
+
+      # =========================
+      # COMMIT
+      # =========================
+      - name: Commit and Push Changes
         run: |
           git config --local user.email "kada.developers@gmail.com"
           git config --local user.name "kadadevelopers"
           git add fr/*.m3u8
-          git commit -m "auto update channels" || echo "No changes"
+          git commit -m "latest updates" || echo "No changes"
           git push
