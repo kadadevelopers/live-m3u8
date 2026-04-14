@@ -21,9 +21,33 @@ jobs:
           mkdir -p fr
           mkdir -p txt
 
-      - name: Generate All Channels (Skip Errors)
+      - name: Generate All Channels (Ultra Safe Mode)
         run: |
+          set +e  # 🔥 لا توقف مهما حدث
+
           USER_AGENT="Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36"
+
+          fetch_with_retry() {
+            local url=$1
+            local referer=$2
+            local output=$3
+
+            for i in 1 2 3; do
+              echo "🔁 Retry $i..."
+
+              timeout 25 curl -k -s \
+                -e "$referer" \
+                -A "$USER_AGENT" \
+                -H "Origin: $referer" \
+                "$url" > "$output" 2>/dev/null || true
+
+              if [ -s "$output" ]; then
+                return 0
+              fi
+            done
+
+            return 1
+          }
 
           declare -A CHANNELS=(
             [videotf1]="https://callofliberty.fr/tv/1-TF1/1-TF1.php"
@@ -68,27 +92,22 @@ jobs:
 
           for key in "${!CHANNELS[@]}"; do
             url="${CHANNELS[$key]}"
+            echo "=============================="
             echo "Processing $key"
 
-            # جلب الرابط
-            stream=$(curl -k -s -H "User-Agent: $USER_AGENT" "$url" | grep -oP "source:\s*'\K[^']+(?=',)")
+            # استخراج الرابط (مع حماية)
+            stream=$(timeout 20 curl -k -s -H "User-Agent: $USER_AGENT" "$url" 2>/dev/null | grep -oP "source:\s*'\K[^']+(?=',)" || true)
 
-            # إذا فشل نكمل
             if [ -z "$stream" ]; then
               echo "❌ Failed to extract stream for $key"
               continue
             fi
 
-            # تحميل m3u8
-            curl -k -s \
-              -e "https://callofliberty.fr/" \
-              -A "$USER_AGENT" \
-              -H "Origin: https://callofliberty.fr" \
-              "$stream" > "fr/$key.m3u8"
+            # تحميل مع retry
+            fetch_with_retry "$stream" "https://callofliberty.fr/" "fr/$key.m3u8"
 
-            # تحقق من الملف
             if [ ! -s "fr/$key.m3u8" ]; then
-              echo "❌ Empty file for $key"
+              echo "❌ Empty or failed $key"
               rm -f "fr/$key.m3u8"
               continue
             fi
@@ -98,19 +117,20 @@ jobs:
 
       - name: Special Case (TMC)
         run: |
-          USER_AGENT="Mozilla/5.0"
-          stream=$(curl -k -s https://callofliberty.fr/tv/1-TF1/1-TF1.php | grep -oP "source:\s*'\K[^']+(?=',)" | sed 's|TF1|TMC|g')
+          set +e
+          stream=$(curl -k -s https://callofliberty.fr/tv/1-TF1/1-TF1.php | grep -oP "source:\s*'\K[^']+(?=',)" | sed 's|TF1|TMC|g' || true)
 
           if [ -n "$stream" ]; then
-            curl -k -s -e "https://callofliberty.fr/" -A "$USER_AGENT" -H "Origin: https://callofliberty.fr" "$stream" > fr/videotmc.m3u8
+            timeout 20 curl -k -s -e "https://callofliberty.fr/" -H "Origin: https://callofliberty.fr" "$stream" > fr/videotmc.m3u8 || true
           fi
 
       - name: Special Case (beIN)
         run: |
-          stream=$(curl -k -s https://lovetier.bz/player/beINAR2 | grep -oP 'streamUrl\s*:\s*"\K[^"]+' | sed 's/\\//g')
+          set +e
+          stream=$(curl -k -s https://lovetier.bz/player/beINAR2 | grep -oP 'streamUrl\s*:\s*"\K[^"]+' | sed 's/\\//g' || true)
 
           if [ -n "$stream" ]; then
-            curl -k -s -e "https://lovetier.bz/" -H "Origin: https://lovetier.bz" "$stream" -o fr/videobeinar2.m3u8
+            timeout 20 curl -k -s -e "https://lovetier.bz/" -H "Origin: https://lovetier.bz" "$stream" -o fr/videobeinar2.m3u8 || true
           fi
 
       - name: Commit and Push
