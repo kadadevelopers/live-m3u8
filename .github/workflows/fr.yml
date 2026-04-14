@@ -18,117 +18,151 @@ jobs:
         with:
           ref: main
 
-      - name: Create fr Folder
-        run: mkdir -p fr
-
-      - name: Create txt Folder
-        run: mkdir -p txt        
-
-      # =========================
-      # FUNCTION SAFE FETCH
-      # =========================
-      - name: Define Safe Function
+      - name: Create Folders
         run: |
-          cat << 'EOF' > safe_fetch.sh
-          fetch_channel() {
-            NAME=$1
-            URL=$2
+          mkdir -p fr
+          mkdir -p txt
 
-            echo "Processing $NAME"
+      - name: Set User Agent
+        run: |
+          echo "UA=Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" >> $GITHUB_ENV
 
-            stream=$(curl -k -s -H "User-Agent: Mozilla/5.0" "$URL" \
-              | grep -oP "source:\s*'\K[^']+" \
-              | grep -E "m3u8" \
-              | head -n 1)
+      # =========================
+      # FUNCTION (REUSABLE)
+      # =========================
+      - name: Create Script Helper
+        run: |
+          cat << 'EOF' > fetch.sh
+          fetch_m3u8 () {
+            PAGE_URL=$1
+            OUTPUT=$2
 
-            if [ -z "$stream" ]; then
-              echo "❌ Failed (no stream) $NAME"
-              return 0
-            fi
+            curl_output=$(curl -k -s -H "User-Agent: $UA" "$PAGE_URL" | grep -oP "source:\s*'\K[^']+(?=',)")
+            curl_output2=$(curl -k -e "https://callofliberty.fr/" -A "$UA" -H "Origin: https://callofliberty.fr" "$curl_output")
 
-            curl -k -s \
-              -e "https://callofliberty.fr/" \
-              -A "Mozilla/5.0" \
-              -H "Origin: https://callofliberty.fr" \
-              "$stream" > "fr/$NAME.m3u8" || true
-
-            if [ ! -s "fr/$NAME.m3u8" ]; then
-              echo "❌ Empty file $NAME"
-              rm -f "fr/$NAME.m3u8"
-              return 0
-            fi
-
-            echo "✅ Done $NAME"
+            echo "$curl_output2" > "$OUTPUT"
           }
           EOF
 
       # =========================
-      # CHANNELS (SAFE)
+      # CHANNELS
       # =========================
-      - name: Run All Channels Safely
+
+      - name: TF1
+        run: bash fetch.sh https://callofliberty.fr/tv/1-TF1/1-TF1.php fr/videotf1.m3u8
+
+      - name: TF1 SERIES FILMS
+        run: bash fetch.sh https://callofliberty.fr/tv/20-TF1SERIESFILMS/20-TF1SERIESFILMS.php fr/videotf1fs.m3u8
+
+      - name: TMC (Derived)
         run: |
-          source safe_fetch.sh
+          curl_output=$(curl -k -s -H "User-Agent: $UA" https://callofliberty.fr/tv/1-TF1/1-TF1.php | grep -oP "source:\s*'\K[^']+(?=',)" | sed 's|TF1|TMC|g')
+          curl -k -e "https://callofliberty.fr/" -A "$UA" -H "Origin: https://callofliberty.fr" "$curl_output" -o fr/videotmc.m3u8
 
-          fetch_channel videotf1 https://callofliberty.fr/tv/1-TF1/1-TF1.php
-          fetch_channel videotf1fs https://callofliberty.fr/tv/20-TF1SERIESFILMS/20-TF1SERIESFILMS.php
-          fetch_channel videotfx https://callofliberty.fr/tv/11-TFX/11-TFX.php
-          fetch_channel videolci https://callofliberty.fr/tv/15-LCI/15-LCI.php
-          fetch_channel videocp https://callofliberty.fr/tv/76-CANALPLUS/76-CANALPLUS.php
-          fetch_channel videom6 https://callofliberty.fr/tv/6-M6/6-M6.php
-          fetch_channel videow9 https://callofliberty.fr/tv/9-W9/9-W9.php
-          fetch_channel videogulli https://callofliberty.fr/tv/12-Gulli/12-Gulli.php
-          fetch_channel video6ter https://callofliberty.fr/tv/22-6ter/22-6ter.php
-          fetch_channel videoab1 https://callofliberty.fr/tv/101-AB1/101-AB1.php
-          fetch_channel videoab3 https://callofliberty.fr/tv/328-AB3/328-AB3.php
-          fetch_channel videortl9 https://callofliberty.fr/tv/99-RTL9/99-RTL9.php
-          fetch_channel videormcstory https://callofliberty.fr/tv/23-RMCSTORY/23-RMCSTORY.php
-          fetch_channel videormclife https://callofliberty.fr/tv/25-RMCLIFE/25-RMCLIFE.php
-          fetch_channel videormcdecouverte https://callofliberty.fr/tv/24-RMCDECOUVERTE/24-RMCDECOUVERTE.php
-          fetch_channel videotcm https://callofliberty.fr/tv/102-TCMCINEMA/102-TCMCINEMA.php
-          fetch_channel videocanalj https://callofliberty.fr/tv/62-CanalJ/62-CanalJ.php
-          fetch_channel videocnw https://callofliberty.fr/tv/64-CARTOONNETWORK/64-CARTOONNETWORK.php
-          fetch_channel videoplanete https://callofliberty.fr/tv/130-PLANETEPLUS/130-PLANETEPLUS.php
-          fetch_channel videoanimaux https://callofliberty.fr/tv/136-ANIMAUX/136-ANIMAUX.php
-          fetch_channel videorts1 https://callofliberty.fr/tv/301-RTS1/301-RTS1.php
-          fetch_channel videorts2 https://callofliberty.fr/tv/302-RTS2/302-RTS2.php
-          fetch_channel videof2 https://callofliberty.fr/tv/2-france.2/2-france.2.php
-          fetch_channel videof3 https://callofliberty.fr/tv/3-france.3/3-france.3.php
-          fetch_channel videof4 https://callofliberty.fr/tv/4-france.4/4-france.4.php
-          fetch_channel videof5 https://callofliberty.fr/tv/5-france.5/5-france.5.php
-          fetch_channel videofranceinfo https://callofliberty.fr/tv/16-franceinfo/16-franceinfo.php
-          fetch_channel videotrek https://callofliberty.fr/tv/212-Trek/212-Trek.php
-          fetch_channel videoalpha https://callofliberty.fr/tv/299-canalalpha/299-canalalpha.php
-          fetch_channel videocarac1 https://callofliberty.fr/tv/304-carac1/304-carac1.php
-          fetch_channel videocarac2 https://callofliberty.fr/tv/305-carac2/305-carac2.php
-          fetch_channel videocarac3 https://callofliberty.fr/tv/306-carac3/306-carac3.php
-          fetch_channel videocarac4 https://callofliberty.fr/tv/307-carac4/307-carac4.php
-          fetch_channel videocarac5 https://callofliberty.fr/tv/308-carac5/308-carac5.php
-          fetch_channel videoarte https://callofliberty.fr/tv/7-ARTE/7-ARTE.php
-          fetch_channel videomtv https://callofliberty.fr/tv/112-MTV/112-MTV.php
-          fetch_channel videomezzo https://callofliberty.fr/tv/147-mezzo/147-mezzo.php
-          fetch_channel videotvm3 https://callofliberty.fr/tv/303-tvm3/303-tvm3.php
+      - name: TFX
+        run: bash fetch.sh https://callofliberty.fr/tv/11-TFX/11-TFX.php fr/videotfx.m3u8
+
+      - name: LCI
+        run: bash fetch.sh https://callofliberty.fr/tv/15-LCI/15-LCI.php fr/videolci.m3u8
+
+      - name: Canal+
+        run: bash fetch.sh https://callofliberty.fr/tv/76-CANALPLUS/76-CANALPLUS.php fr/videocp.m3u8
+
+      - name: M6
+        run: bash fetch.sh https://callofliberty.fr/tv/6-M6/6-M6.php fr/videom6.m3u8
+
+      - name: W9
+        run: bash fetch.sh https://callofliberty.fr/tv/9-W9/9-W9.php fr/videow9.m3u8
+
+      - name: Gulli
+        run: bash fetch.sh https://callofliberty.fr/tv/12-Gulli/12-Gulli.php fr/videogulli.m3u8
+
+      - name: 6ter
+        run: bash fetch.sh https://callofliberty.fr/tv/22-6ter/22-6ter.php fr/video6ter.m3u8
+
+      - name: AB1
+        run: bash fetch.sh https://callofliberty.fr/tv/101-AB1/101-AB1.php fr/videoab1.m3u8
+
+      - name: AB3
+        run: bash fetch.sh https://callofliberty.fr/tv/328-AB3/328-AB3.php fr/videoab3.m3u8
+
+      - name: RTL9
+        run: bash fetch.sh https://callofliberty.fr/tv/99-RTL9/99-RTL9.php fr/videortl9.m3u8
+
+      - name: RMC Story
+        run: bash fetch.sh https://callofliberty.fr/tv/23-RMCSTORY/23-RMCSTORY.php fr/videormcstory.m3u8
+
+      - name: RMC Life
+        run: bash fetch.sh https://callofliberty.fr/tv/25-RMCLIFE/25-RMCLIFE.php fr/videormclife.m3u8
+
+      - name: RMC Decouverte
+        run: bash fetch.sh https://callofliberty.fr/tv/24-RMCDECOUVERTE/24-RMCDECOUVERTE.php fr/videormcdecouverte.m3u8
+
+      - name: TCM
+        run: bash fetch.sh https://callofliberty.fr/tv/102-TCMCINEMA/102-TCMCINEMA.php fr/videotcm.m3u8
+
+      - name: Canal J
+        run: bash fetch.sh https://callofliberty.fr/tv/62-CanalJ/62-CanalJ.php fr/videocanalj.m3u8
+
+      - name: Cartoon Network
+        run: bash fetch.sh https://callofliberty.fr/tv/64-CARTOONNETWORK/64-CARTOONNETWORK.php fr/videocnw.m3u8
+
+      - name: Planete+
+        run: bash fetch.sh https://callofliberty.fr/tv/130-PLANETEPLUS/130-PLANETEPLUS.php fr/videoplanete.m3u8
+
+      - name: Animaux
+        run: bash fetch.sh https://callofliberty.fr/tv/136-ANIMAUX/136-ANIMAUX.php fr/videoanimaux.m3u8
+
+      - name: RTS1
+        run: bash fetch.sh https://callofliberty.fr/tv/301-RTS1/301-RTS1.php fr/videorts1.m3u8
+
+      - name: RTS2
+        run: bash fetch.sh https://callofliberty.fr/tv/302-RTS2/302-RTS2.php fr/videorts2.m3u8
+
+      - name: France 2
+        run: bash fetch.sh https://callofliberty.fr/tv/2-france.2/2-france.2.php fr/videof2.m3u8
+
+      - name: France 3
+        run: bash fetch.sh https://callofliberty.fr/tv/3-france.3/3-france.3.php fr/videof3.m3u8
+
+      - name: France 4
+        run: bash fetch.sh https://callofliberty.fr/tv/4-france.4/4-france.4.php fr/videof4.m3u8
+
+      - name: France 5
+        run: bash fetch.sh https://callofliberty.fr/tv/5-france.5/5-france.5.php fr/videof5.m3u8
+
+      - name: France Info
+        run: bash fetch.sh https://callofliberty.fr/tv/16-franceinfo/16-franceinfo.php fr/videofranceinfo.m3u8
+
+      - name: Trek
+        run: bash fetch.sh https://callofliberty.fr/tv/212-Trek/212-Trek.php fr/videotrek.m3u8
+
+      - name: Canal Alpha
+        run: bash fetch.sh https://callofliberty.fr/tv/299-canalalpha/299-canalalpha.php fr/videoalpha.m3u8
+
+      - name: Arte
+        run: bash fetch.sh https://callofliberty.fr/tv/7-ARTE/7-ARTE.php fr/videoarte.m3u8
+
+      - name: MTV
+        run: bash fetch.sh https://callofliberty.fr/tv/112-MTV/112-MTV.php fr/videomtv.m3u8
+
+      - name: Mezzo
+        run: bash fetch.sh https://callofliberty.fr/tv/147-mezzo/147-mezzo.php fr/videomezzo.m3u8
+
+      - name: TVM3
+        run: bash fetch.sh https://callofliberty.fr/tv/303-tvm3/303-tvm3.php fr/videotvm3.m3u8
 
       # =========================
-      # SPECIAL CASES
+      # BEIN (SPECIAL CASE)
       # =========================
-      - name: Special Case TMC
+      - name: beIN AR2
         run: |
-          stream=$(curl -k -s https://callofliberty.fr/tv/1-TF1/1-TF1.php \
-            | grep -oP "source:\s*'\K[^']+" \
-            | grep m3u8 | head -n1 | sed 's|TF1|TMC|g')
-
-          [ -n "$stream" ] && curl -k -s "$stream" > fr/videotmc.m3u8 || true
-
-      - name: Special Case beIN
-        run: |
-          stream=$(curl -k -s https://lovetier.bz/player/beINAR2 \
-            | grep -oP 'streamUrl\s*:\s*"\K[^"]+' \
-            | sed 's/\\//g')
-
-          [ -n "$stream" ] && curl -k -s "$stream" -o fr/videobeinar2.m3u8 || true
+          curl_output=$(curl -k -s -H "User-Agent: $UA" https://lovetier.bz/player/beINAR2 | grep -oP 'streamUrl\s*:\s*"\K[^"]+')
+          stream_url=${curl_output//\\\//\/}
+          curl -k -s -e "https://lovetier.bz/" -A "$UA" -H "Origin: https://lovetier.bz" "$stream_url" -o fr/videobeinar2.m3u8
 
       # =========================
-      # COMMIT
+      # PUSH
       # =========================
       - name: Commit and Push Changes
         run: |
