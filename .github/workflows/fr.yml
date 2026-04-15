@@ -65,11 +65,17 @@ jobs:
           curl_output=$(curl -k -s -H "User-Agent: Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" https://callofliberty.fr/tv/12-Gulli/12-Gulli.php | grep -oP "source:\s*'\K[^']+(?=',)")
           curl_output2=$(curl -k -e "https://callofliberty.fr/" -A "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" -H "Origin: https://callofliberty.fr" $curl_output)
           echo "$curl_output2" > fr/videogulli.m3u8  # Use single > to overwrite existing content
-      - name: Run Script and Generate M3U8 for Video6ter
+      - name: Run Script and Generate MPD for Video6ter
         run: |
           curl_output=$(curl -k -s -H "User-Agent: Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" https://callofliberty.fr/tv/22-6ter/22-6ter.php | grep -oP "source:\s*'\K[^']+(?=',)")
-          curl_output2=$(curl -k -e "https://callofliberty.fr/" -A "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" -H "Origin: https://callofliberty.fr" $curl_output)
-          echo "$curl_output2" > fr/video6ter.m3u8  # Use single > to overwrite existing content
+    
+              mpd_url=$(echo "$curl_output" | sed 's/\.m3u8/.mpd/g')
+
+              curl_output2=$(curl -k -e "https://callofliberty.fr/" \
+              -A "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" \
+              -H "Origin: https://callofliberty.fr" "$mpd_url")
+
+              echo "$curl_output2" > fr/video6ter.mpd
       - name: Run Script and Generate M3U8 for VideoAb3
         run: |
           curl_output=$(curl -k -s -H "User-Agent: Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36" https://callofliberty.fr/tv/328-AB3/328-AB3.php | grep -oP "source:\s*'\K[^']+(?=',)")
