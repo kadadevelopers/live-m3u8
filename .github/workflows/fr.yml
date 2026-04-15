@@ -2,10 +2,12 @@ name: Run Script TNT Every 6 Hours FR
 
 on:
   schedule:
-    - cron: '0 */3 * * *'  # Run every 3 hours
-  workflow_dispatch:      # Enable manual triggering
-  permissions:
-  contents: write
+    - cron: '0 */3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write   # 🔥 مهم جدا للسماح بالـ push
+
 jobs:
   run_script:
     runs-on: ubuntu-latest
@@ -14,13 +16,18 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
         with:
-         ref: main
+          ref: main
+          persist-credentials: true   # 🔥 مهم
 
       - name: Create fr Folder
         run: mkdir -p fr
 
       - name: Create txt Folder
         run: mkdir -p txt        
+
+      # =========================
+      # (جميع السكريبتات كما هي بدون تغيير)
+      # =========================
 
       - name: Run Script and Generate M3U8 for VideoTF1
         run: |
