@@ -20,3 +20,5 @@ All the world's channels are available, including the best channels: SKY, beIN S
 ```
 https://yacinetv.net/all.m3u
 ```
+
+![VLC Network Panel](https://raw.githubusercontent.com/kadadevelopers/live-m3u8/refs/heads/main/master/.readme/Screenshot_5.jpg)
