@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Bedrock rewrited (v1.19.0) -->
-<MPD id="0" profiles="urn:mpeg:dash:profile:isoff-live:2011" type="dynamic" minimumUpdatePeriod="PT2S" minBufferTime="PT2S" timeShiftBufferDepth="PT15M1.130S" suggestedPresentationDelay="PT12S" availabilityStartTime="2024-01-01T00:00:00.000000+00:00" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:mpeg:dash:schema:mpd:2011" xmlns:mspr="urn:microsoft:playready" xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 http://standards.iso.org/ittf/PubliclyAvailableStandards/MPEG-DASH_schema_files/DASH-MPD.xsd" publishTime="2026-05-14T02:45:21.000215+00:00">
+<MPD id="0" profiles="urn:mpeg:dash:profile:isoff-live:2011" type="dynamic" minimumUpdatePeriod="PT2S" minBufferTime="PT2S" timeShiftBufferDepth="PT15M1.890S" suggestedPresentationDelay="PT12S" availabilityStartTime="2024-01-01T00:00:00.000000+00:00" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:mpeg:dash:schema:mpd:2011" xmlns:mspr="urn:microsoft:playready" xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 http://standards.iso.org/ittf/PubliclyAvailableStandards/MPEG-DASH_schema_files/DASH-MPD.xsd" publishTime="2026-05-14T06:22:48.000206+00:00">
   <Period id="590071668" start="PT18374H23M26.720S">
     <AdaptationSet id="1651888824" contentType="video" mimeType="video/mp4" segmentAlignment="true" startWithSAP="1" bitstreamSwitching="true">
       <ContentProtection schemeIdUri="urn:mpeg:dash:mp4protection:2011" value="cenc" xmlns:cenc="urn:mpeg:cenc:2013" cenc:default_KID="05614a18-d934-36c5-9383-bcfa64a26265"/>
@@ -12,9 +12,9 @@
         <cenc:pssh xmlns:cenc="urn:mpeg:cenc:2013">AAAAYHBzc2gAAAAA7e+LqXnWSs6jyCfc1R0h7QAAAEAIARIQBWFKGNk0NsWTg7z6ZKJiZSIoZXlKaGMzTmxkRWxrSWpvaVpHRnphR05sYm1OZlozVnNiR2tpZlE9PTgA</cenc:pssh>
       </ContentProtection>
       <Role schemeIdUri="urn:mpeg:dash:role:2011" value="main"/>
-      <SegmentTemplate timescale="50000" media="https://s2.callofliberty.fr/tv/proxy/HLS-AES/https://origin-m6web.live.6cloud.fr/out/v1/6play/6play-gulli/cmaf_cenc00/segment_$RepresentationID$_$Number$.mp4" initialization="https://s2.callofliberty.fr/tv/proxy/HLS-AES/https://origin-m6web.live.6cloud.fr/out/v1/6play/6play-gulli/cmaf_cenc00/segment_$RepresentationID$_691490238_init.mp4" startNumber="694814776" presentationTimeOffset="88510750336000">
+      <SegmentTemplate timescale="50000" media="https://s2.callofliberty.fr/tv/proxy/HLS-AES/https://origin-m6web.live.6cloud.fr/out/v1/6play/6play-gulli/cmaf_cenc00/segment_$RepresentationID$_$Number$.mp4" initialization="https://s2.callofliberty.fr/tv/proxy/HLS-AES/https://origin-m6web.live.6cloud.fr/out/v1/6play/6play-gulli/cmaf_cenc00/segment_$RepresentationID$_691490238_init.mp4" startNumber="694819872" presentationTimeOffset="88510750336000">
         <SegmentTimeline>
-          <S t="88936291200000" d="128000" r="351"/>
+          <S t="88936943488000" d="128000" r="351"/>
         </SegmentTimeline>
       </SegmentTemplate>
       <Representation id="video-1024x576-1000000-Video1_2" bandwidth="1000000" codecs="avc1.64001F" frameRate="25/1" width="1024" height="576"/>
@@ -34,9 +34,9 @@
       </ContentProtection>
       <Role schemeIdUri="urn:mpeg:dash:role:2011" value="main"/>
       <Label>LV</Label>
-      <SegmentTemplate timescale="48000" media="https://s2.callofliberty.fr/tv/proxy/HLS-AES/https://origin-m6web.live.6cloud.fr/out/v1/6play/6play-gulli/cmaf_cenc00/segment_$RepresentationID$_$Number$.mp4" initialization="https://s2.callofliberty.fr/tv/proxy/HLS-AES/https://origin-m6web.live.6cloud.fr/out/v1/6play/6play-gulli/cmaf_cenc00/segment_$RepresentationID$_691490238_init.mp4" startNumber="694814776" presentationTimeOffset="84970320322560">
+      <SegmentTemplate timescale="48000" media="https://s2.callofliberty.fr/tv/proxy/HLS-AES/https://origin-m6web.live.6cloud.fr/out/v1/6play/6play-gulli/cmaf_cenc00/segment_$RepresentationID$_$Number$.mp4" initialization="https://s2.callofliberty.fr/tv/proxy/HLS-AES/https://origin-m6web.live.6cloud.fr/out/v1/6play/6play-gulli/cmaf_cenc00/segment_$RepresentationID$_691490238_init.mp4" startNumber="694819872" presentationTimeOffset="84970320322560">
         <SegmentTimeline>
-          <S t="85378839552512" d="122880" r="351"/>
+          <S t="85379465748992" d="122880" r="351"/>
         </SegmentTimeline>
       </SegmentTemplate>
       <Representation id="audio-1-fra-128000-Audio2_6" bandwidth="128000" codecs="mp4a.40.2" audioSamplingRate="48000">
@@ -53,9 +53,9 @@
         <cenc:pssh xmlns:cenc="urn:mpeg:cenc:2013">AAAAYHBzc2gAAAAA7e+LqXnWSs6jyCfc1R0h7QAAAEAIARIQBWFKGNk0NsWTg7z6ZKJiZSIoZXlKaGMzTmxkRWxrSWpvaVpHRnphR05sYm1OZlozVnNiR2tpZlE9PTgA</cenc:pssh>
       </ContentProtection>
       <Label>OV</Label>
-      <SegmentTemplate timescale="48000" media="https://s2.callofliberty.fr/tv/proxy/HLS-AES/https://origin-m6web.live.6cloud.fr/out/v1/6play/6play-gulli/cmaf_cenc00/segment_$RepresentationID$_$Number$.mp4" initialization="https://s2.callofliberty.fr/tv/proxy/HLS-AES/https://origin-m6web.live.6cloud.fr/out/v1/6play/6play-gulli/cmaf_cenc00/segment_$RepresentationID$_691490238_init.mp4" startNumber="694814776" presentationTimeOffset="84970320322560">
+      <SegmentTemplate timescale="48000" media="https://s2.callofliberty.fr/tv/proxy/HLS-AES/https://origin-m6web.live.6cloud.fr/out/v1/6play/6play-gulli/cmaf_cenc00/segment_$RepresentationID$_$Number$.mp4" initialization="https://s2.callofliberty.fr/tv/proxy/HLS-AES/https://origin-m6web.live.6cloud.fr/out/v1/6play/6play-gulli/cmaf_cenc00/segment_$RepresentationID$_691490238_init.mp4" startNumber="694819872" presentationTimeOffset="84970320322560">
         <SegmentTimeline>
-          <S t="85378839552512" d="122880" r="351"/>
+          <S t="85379465748992" d="122880" r="351"/>
         </SegmentTimeline>
       </SegmentTemplate>
       <Representation id="audio-2-qaa-128000-Audio3_7" bandwidth="128000" codecs="mp4a.40.2" audioSamplingRate="48000">
@@ -74,9 +74,9 @@
       </ContentProtection>
       <Role schemeIdUri="urn:mpeg:dash:role:2011" value="alternate"/>
       <Label>AD</Label>
-      <SegmentTemplate timescale="48000" media="https://s2.callofliberty.fr/tv/proxy/HLS-AES/https://origin-m6web.live.6cloud.fr/out/v1/6play/6play-gulli/cmaf_cenc00/segment_$RepresentationID$_$Number$.mp4" initialization="https://s2.callofliberty.fr/tv/proxy/HLS-AES/https://origin-m6web.live.6cloud.fr/out/v1/6play/6play-gulli/cmaf_cenc00/segment_$RepresentationID$_691490238_init.mp4" startNumber="694814776" presentationTimeOffset="84970320322560">
+      <SegmentTemplate timescale="48000" media="https://s2.callofliberty.fr/tv/proxy/HLS-AES/https://origin-m6web.live.6cloud.fr/out/v1/6play/6play-gulli/cmaf_cenc00/segment_$RepresentationID$_$Number$.mp4" initialization="https://s2.callofliberty.fr/tv/proxy/HLS-AES/https://origin-m6web.live.6cloud.fr/out/v1/6play/6play-gulli/cmaf_cenc00/segment_$RepresentationID$_691490238_init.mp4" startNumber="694819872" presentationTimeOffset="84970320322560">
         <SegmentTimeline>
-          <S t="85378839552512" d="122880" r="351"/>
+          <S t="85379465748992" d="122880" r="351"/>
         </SegmentTimeline>
       </SegmentTemplate>
       <Representation id="audio-3-qad-128000-Audio4_8" bandwidth="128000" codecs="mp4a.40.2" audioSamplingRate="48000">
@@ -86,9 +86,9 @@
     <AdaptationSet id="1031646886" contentType="application" mimeType="application/mp4" segmentAlignment="true" startWithSAP="1" bitstreamSwitching="true" codecs="stpp" lang="fre">
       <Label>fre</Label>
       <Role schemeIdUri="urn:mpeg:dash:role:2011" value="subtitle"/>
-      <SegmentTemplate timescale="50000" media="https://s2.callofliberty.fr/tv/proxy/HLS-AES/https://origin-m6web.live.6cloud.fr/out/v1/6play/6play-gulli/cmaf_cenc00/segment_$RepresentationID$_$Number$.mp4" initialization="https://s2.callofliberty.fr/tv/proxy/HLS-AES/https://origin-m6web.live.6cloud.fr/out/v1/6play/6play-gulli/cmaf_cenc00/segment_$RepresentationID$_691490238_init.mp4" startNumber="694814776" presentationTimeOffset="88510750336000">
+      <SegmentTemplate timescale="50000" media="https://s2.callofliberty.fr/tv/proxy/HLS-AES/https://origin-m6web.live.6cloud.fr/out/v1/6play/6play-gulli/cmaf_cenc00/segment_$RepresentationID$_$Number$.mp4" initialization="https://s2.callofliberty.fr/tv/proxy/HLS-AES/https://origin-m6web.live.6cloud.fr/out/v1/6play/6play-gulli/cmaf_cenc00/segment_$RepresentationID$_691490238_init.mp4" startNumber="694819872" presentationTimeOffset="88510750336000">
         <SegmentTimeline>
-          <S t="88936291200000" d="128000" r="351"/>
+          <S t="88936943488000" d="128000" r="351"/>
         </SegmentTimeline>
       </SegmentTemplate>
       <Representation id="data-0-fre-Data0_9" bandwidth="256"/>
@@ -97,14 +97,14 @@
       <Label>fra_hoh</Label>
       <Role schemeIdUri="urn:mpeg:dash:role:2011" value="caption"/>
       <Accessibility schemeIdUri="urn:mpeg:dash:role:2011" value="caption"/>
-      <SegmentTemplate timescale="50000" media="https://s2.callofliberty.fr/tv/proxy/HLS-AES/https://origin-m6web.live.6cloud.fr/out/v1/6play/6play-gulli/cmaf_cenc00/segment_$RepresentationID$_$Number$.mp4" initialization="https://s2.callofliberty.fr/tv/proxy/HLS-AES/https://origin-m6web.live.6cloud.fr/out/v1/6play/6play-gulli/cmaf_cenc00/segment_$RepresentationID$_691490238_init.mp4" startNumber="694814776" presentationTimeOffset="88510750336000">
+      <SegmentTemplate timescale="50000" media="https://s2.callofliberty.fr/tv/proxy/HLS-AES/https://origin-m6web.live.6cloud.fr/out/v1/6play/6play-gulli/cmaf_cenc00/segment_$RepresentationID$_$Number$.mp4" initialization="https://s2.callofliberty.fr/tv/proxy/HLS-AES/https://origin-m6web.live.6cloud.fr/out/v1/6play/6play-gulli/cmaf_cenc00/segment_$RepresentationID$_691490238_init.mp4" startNumber="694819872" presentationTimeOffset="88510750336000">
         <SegmentTimeline>
-          <S t="88936291200000" d="128000" r="351"/>
+          <S t="88936943488000" d="128000" r="351"/>
         </SegmentTimeline>
       </SegmentTemplate>
       <Representation id="data-1-fra-Data1_10" bandwidth="256"/>
     </AdaptationSet>
-    <SupplementalProperty schemeIdUri="urn:scte:dash:utc-time" value="2026-05-14T02:30:24Z"/>
+    <SupplementalProperty schemeIdUri="urn:scte:dash:utc-time" value="2026-05-14T06:07:49.760Z"/>
   </Period>
-  <UTCTiming schemeIdUri="urn:mpeg:dash:utc:direct:2014" value="2026-05-14T02:45:21.215Z"/>
+  <UTCTiming schemeIdUri="urn:mpeg:dash:utc:direct:2014" value="2026-05-14T06:22:48.206Z"/>
 </MPD>
